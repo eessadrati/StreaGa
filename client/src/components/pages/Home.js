@@ -1,6 +1,6 @@
 import { createTheme, ThemeProvider } from '@mui/material';
 import React from 'react';
-import Video from '../layaout/Video';
+import Video from '../layout/Video';
 
 const theme = createTheme({
     palette: {
@@ -21,7 +21,7 @@ const Home = () => {
 
     return (
         <div>
-        <ThemeProvider  theme={theme}>
+        <ThemeProvider theme={theme}>
               <Video/>
         </ThemeProvider>
           
