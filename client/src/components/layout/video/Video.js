@@ -1,12 +1,14 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect,useState } from 'react';
 import { CardMedia, Container, CssBaseline, Grid, Stack, TextField, Typography } from '@mui/material';
 
-import useWindowDimensions from '../../utils/useWindowDimensions';
-import VideoPlayer from './videoPlayer/VideoPlayer';
+import useWindowDimensions from '../../../utils/useWindowDimensions';
+import VideoPlayer from './VideoPlayer';
+import LivePlayer from './LivePlayer';
 
 const Video = () => {
   const { height, width } = useWindowDimensions();
   const followedChannels = useRef([])
+  const [isLive, setIsLive] = useState(false);
   console.log("height:"+height+", wdth:"+width)
   const chat = [{name:"hassan", message:"salam"},{name:"hassan2", message:"salam2"},{name:"hassan3", message:"salam3"},{name:"hassan4", message:"salam"},{name:"hassan5", message:"salam2"},{name:"hassan6", message:"salam3"},{name:"hassan7", message:"salam"},{name:"hassan8", message:"salam2"},{name:"hassan9", message:"salam3"},{name:"hassan", message:"salam"},{name:"hassan2", message:"salam2"},{name:"hassan3", message:"salam3"},{name:"hassan", message:"salam"},{name:"hassan2", message:"salam2"},{name:"hassan3", message:"salam3"},{name:"hassan", message:"salam"},{name:"hassan2", message:"salam2"},{name:"hassan3", message:"salam3"},{name:"hassan", message:"salam"},{name:"hassan2", message:"salam2"},{name:"hassan3", message:"salam3"},{name:"hassan", message:"salam"},{name:"hassan", message:"salam"},{name:"hassan2", message:"salam2"},{name:"hassan3", message:"salam3"},{name:"hassan4", message:"salam"},{name:"hassan5", message:"salam2"},{name:"hassan6", message:"salam3"},{name:"hassan7", message:"salam"},{name:"hassan8", message:"salam2"},{name:"hassan9", message:"salam3"},{name:"hassan", message:"salam"},{name:"hassan2", message:"salam2"},{name:"hassan3", message:"salam3"},{name:"hassan", message:"salam"},{name:"hassan2", message:"salam2"},{name:"hassan3", message:"salam3"},{name:"hassan", message:"salam"},{name:"hassan2", message:"salam2"},{name:"hassan3", message:"salam3"},{name:"hassan", message:"salam"},{name:"hassan2", message:"salam2"},{name:"hassan3", message:"salam3"},{name:"hassan", message:"salam"},{name:"hassan", message:"salam"},{name:"hassan2", message:"salam2"},{name:"hassan3", message:"salam3"},{name:"hassan4", message:"salam"},{name:"hassan5", message:"salam2"},{name:"hassan6", message:"salam3"},{name:"hassan7", message:"salam"},{name:"hassan8", message:"salam2"},{name:"hassan9", message:"salam3"},{name:"hassan", message:"salam"},{name:"hassan2", message:"salam2"},{name:"hassan3", message:"salam3"},{name:"hassan", message:"salam"},{name:"hassan2", message:"salam2"},{name:"hassan3", message:"salam3"},{name:"hassan", message:"salam"},{name:"hassan2", message:"salam2"},{name:"hassan3", message:"salam3"},{name:"hassan", message:"salam"},{name:"hassan2", message:"salam2"},{name:"hassan3", message:"salam3"},{name:"hassan", message:"salam"},{name:"hassan2", message:"salam2"},{name:"hassan3", message:"salam3"}]
     const styles = {
@@ -21,12 +23,13 @@ const Video = () => {
       console.log(followedChannels)
     },[])
   
-
+    const srcQuality = [ { label: "240p", src: "link" }, { label: "360p", src: "lik" },
+    { label: "480p", src: "480p" },{ label: "720p", src: "720p" },{ label: "1080p", src: "1080p" },];
     return (
         <>
         <CssBaseline/> 
          <Grid container sx={{bgcolor:'white', height:height,overflow:'hidden'}}>
-            <Grid item spacing={0} xs={2} sx={{bgcolor:'green'}}>
+            <Grid item xs={2} sx={{bgcolor:'green'}}>
                 <Typography>Followed channel</Typography>
                 <Grid >
                   {followedChannels.current.map((channel,index)=>(
@@ -35,11 +38,16 @@ const Video = () => {
                 </Grid>
             </Grid>
             <Grid item xs={7} sx={{ maxHeight:'100%', overflow:'auto', '&::-webkit-scrollbar': {display: 'none'}}} >
-            <Grid sx={{ height:'auto', bgcolor:'blue',padding:'1.2vw'}}>
-
-            {/** const srcQuality = [ { label: "240p", src: "link" }, { label: "360p", src: "lik" },
-            { label: "480p", src: "480p" },{ label: "720p", src: "720p" },{ label: "1080p", src: "1080p" },]; */}
-            <VideoPlayer src={"/video2.mp4"} srcQualities={[{ label: "240p", src: "link" }, { label: "360p", src: "lik" }]}/>
+            <Grid sx={{padding:'0.2vw'}}>
+            {isLive ? (
+              <>
+                <LivePlayer src={"/video2.mp4"} srcQualities={srcQuality}/>
+              </>
+              ) : (
+              <>
+                <VideoPlayer src={"/video2.mp4"} srcQualities={srcQuality}/>
+              </>
+              )}
             <Grid sx={{height:400}}>
            Hello world
             </Grid>
