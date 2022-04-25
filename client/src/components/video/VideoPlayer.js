@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import "./videoPlayer.css";
-import useOutsideClick from "./utils/useOutsideClick";
+import useOutsideClick from "../../utils/useOutsideClick";
 import useInsideClick from "./utils/useInsideClick";
 import Loader from './loader/Loader';
 const VideoPlayer = (props) => {
@@ -528,7 +528,7 @@ useEffect(() => {
               </i>
             </span>
           ) : (
-            <span className="icon" onClick={() => videoHandler("play")}>
+            <span className="icon">
               <i className="material-icons play" ref={bigPausePlayRef}>
                 play_arrow
               </i>

@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import "./livePlayer.css";
 import "./videoPlayer.css";
-import useOutsideClick from "./utils/useOutsideClick";
+import useOutsideClick from "../../utils/useOutsideClick";
 import useInsideClick from "./utils/useInsideClick";
 import Loader from './loader/Loader';
 const LivePlayer = (props) => {
@@ -22,7 +22,7 @@ const LivePlayer = (props) => {
   const [volumeIcon, setVolumeIcon] = useState("volume_up");
   const [playing, setPlaying] = useState(false);
   const [videoTime, setVideoTime] = useState("0:00:00");
-  const [currentTime, setCurrentTime] = useState(0);
+  const [watching, setWatching] = useState(0);
   const [videoQuality, setVideoQuality] = useState("Auto");
   const [video, setVideo] = useState(props.src);
   const [loading, setLoading] = useState(true);
@@ -57,11 +57,6 @@ const LivePlayer = (props) => {
   const handleTimeUpdated = () => {
    // setCurrentTime(videoRef.current?.currentTime);
    const time=videoRef.current?.currentTime
-  /* Math.floor(currentTime / 60) +
-                  ":" +
-
-                  ("0" + Math.floor(currentTime % 60)).slice(-2)*/
- 
     setVideoTime(`${Math.floor(time / 3600)}:${("0"+Math.floor((time % 3600)/60)).slice(-2)}:${("0"+Math.floor((time % 3600)%60)).slice(-2)}`);
   };
   
@@ -472,10 +467,12 @@ useEffect(() => {
             <div className="live-icon">
               <span className="icon"></span>
               Live
-             </div>
+            </div>
+            {/** <div className="watching">
+              {`${watching} watching now...`}
+            </div>*/}
           </div>
-          <div className="watching">
-          </div>
+          
           <div className="controls-right">
             <span className="icon" onClick={handleSettingsBtn}>
               <i className="material-icons settingsBtn" ref={settingsBtnRef}>
