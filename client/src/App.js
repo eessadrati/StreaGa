@@ -9,7 +9,7 @@ const theme = createTheme({
       paper: '#000',
     },
     text: {
-      primary: 'red',
+      primary: '#000',
       secondary: '#46505A',
     },
     action: {

@@ -1,9 +1,10 @@
 import React from "react";
+import Video from "./Video";
 
 const Home = () => {
   return (
     <div>
-     home page
+    <Video/>
     </div>
   );
 };

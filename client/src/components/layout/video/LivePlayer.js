@@ -1,55 +1,39 @@
 import React, { useRef, useState, useEffect } from "react";
+import "./livePlayer.css";
 import "./videoPlayer.css";
-import useOutsideClick from "../../utils/useOutsideClick";
+import useOutsideClick from "../../../utils/useOutsideClick";
 import useInsideClick from "./utils/useInsideClick";
 import Loader from './loader/Loader';
-const VideoPlayer = (props) => {
+const LivePlayer = (props) => {
   const videoRef = useRef(null);
   const settingsBtnRef = useRef(null);
-  const playbackRef = useRef(null);
   const qualityRef = useRef(null);
   const autoPlayRef = useRef(null);
   const pausePlayRef = useRef(null);
   const bigPausePlayRef = useRef(null);
   const controlsRef = useRef(null);
-  const fastFrowardRef = useRef(null);
-  const fastRewindRef = useRef(null);
   const volumeRef = useRef(null);
   const videoPlayerRef = useRef(null);
   const fullScreenRef = useRef(null);
-  const progressAreaTimeRef = useRef(null);
   const settingsRef = useRef(null);
   const loaderRef = useRef(null);
   const errorRef = useRef(null);
   const [volumeRange, setVolumeRange] = useState(80);
   const [volumeIcon, setVolumeIcon] = useState("volume_up");
   const [playing, setPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [videoTime, setVideoTime] = useState(0);
-  const [progress, setProgress] = useState(0);
-  const [videoSpeed, setVideoSpeed] = useState("Normal");
+  const [videoTime, setVideoTime] = useState("0:00:00");
+  const [watching, setWatching] = useState(0);
   const [videoQuality, setVideoQuality] = useState("Auto");
   const [video, setVideo] = useState(props.src);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const srcQualities =props.srcQualities ? props.srcQualities : null;
-  const playbackSpeedList = [
-    "0.25",
-    "0.5",
-    "0.75",
-    "1",
-    "1.25",
-    "1.5",
-    "1.75",
-    "2",
-  ];
+  
 
   useOutsideClick(settingsRef, settingsBtnRef, () =>
     settingsRef.current.classList.remove("active")
   );
-  useOutsideClick(playbackRef, settingsRef, () =>
-    playbackRef.current.classList.remove("active")
-  );
+  
   useOutsideClick(qualityRef, settingsRef, () =>
     qualityRef.current.classList.remove("active")
   );
@@ -59,39 +43,23 @@ const VideoPlayer = (props) => {
     if (control === "play") {
       videoRef.current.play();
       setPlaying(true);
-      setVideoTime(videoRef.current.duration);
     } else if (control === "pause") {
       videoRef.current.pause();
       setPlaying(false);
     }
   };
 
-  const fastForward = () => {
-    videoRef.current.currentTime += 5;
-  };
-
-  const revert = () => {
-    videoRef.current.currentTime -= 5;
-  };
-
   const handleOnLoadedData = () => {
     //videoHandler("play");
     setLoading(false);
-    setVideoTime(videoRef.current.duration);
   };
 
   const handleTimeUpdated = () => {
-    setCurrentTime(videoRef.current?.currentTime);
-    setProgress((videoRef.current?.currentTime / videoTime) * 100);
+   // setCurrentTime(videoRef.current?.currentTime);
+   const time=videoRef.current?.currentTime
+    setVideoTime(`${Math.floor(time / 3600)}:${("0"+Math.floor((time % 3600)/60)).slice(-2)}:${("0"+Math.floor((time % 3600)%60)).slice(-2)}`);
   };
   
-  const handleProgressArea = (e) => {
-    const progressArea = document.querySelector(".progress-area");
-    let progressWidthval = progressArea.clientWidth;
-    let ClickOffsetX = e.nativeEvent.offsetX;
-    videoRef.current.currentTime =
-      (ClickOffsetX / progressWidthval) * videoTime;
-  };
 
   // change volume
   const handleVolume = (e) => {
@@ -117,27 +85,9 @@ const VideoPlayer = (props) => {
     }
   };
 
-  // Update progress area time and display block on mouse move
-  const handleMouseMove = (e) => {
-    const progressArea = document.querySelector(".progress-area")
-    const progressWidthval = progressArea.clientWidth;
-    const x = e.nativeEvent.offsetX+3;
-    progressAreaTimeRef.current.style.setProperty("--x", `${x}px`);
-    progressAreaTimeRef.current.style.display = "block";
-    let progressTime = Math.floor((x / progressWidthval) * videoTime);
-    let currentMin = Math.floor(progressTime / 60);
-    let currentSec = Math.floor(progressTime % 60);
-    currentSec = currentSec < 0 ? 0 : currentSec;
-    currentMin = currentMin < 0 ? 0 : currentMin;
-    // if seconds are less then 10 then add 0 at the begning
-    currentSec = currentSec < 10 ? "0" + currentSec : currentSec;
-    progressAreaTimeRef.current.innerHTML = `${currentMin} : ${currentSec}`;
-  };
+  
 
-  const handleOnMouseLeave = () => {
-    progressAreaTimeRef.current.style.display = "none";
-  };
-
+  
   // Full screen function
   const handleFullScreen = () => {
     if (!videoPlayerRef.current.classList.contains("openFullScreen")) {
@@ -152,15 +102,7 @@ const VideoPlayer = (props) => {
     }
   };
 
-  //auto play
-  const handleAutoPlay = (e) => {
-    autoPlayRef.current.classList.toggle("active");
-    if (autoPlayRef.current.classList.contains("active")) {
-      autoPlayRef.current.title = "Autoplay is on";
-    } else {
-      autoPlayRef.current.title = "Autoplay is off";
-    }
-  };
+  
 
   const handleOnVideoEnded = () => {
     if (autoPlayRef.current.classList.contains("active")) {
@@ -178,37 +120,13 @@ const VideoPlayer = (props) => {
 
   //settings
   const handleSettingsBtn = () => {
-    playbackRef.current.classList.remove("active");
     settingsRef.current.classList.toggle("active");
     settingsBtnRef.current.classList.toggle("active");
-  };
-
-  const handlePlaybackBtn = () => {
-    settingsRef.current.classList.remove("active");
-    qualityRef.current.classList.remove("active");
-    playbackRef.current.classList.add("active");
-  };
-
-  //playback settings
-  const handlePlayback = (e, speed) => {
-    const playback = document.querySelectorAll("#playback li");
-    playback.forEach((event) => {
-      event.classList.remove("active");
-    });
-    e.target.classList.add("active");
-    videoRef.current.playbackRate = speed;
-    setVideoSpeed(speed === "1" ? "Normal" : speed);
-  };
-
-  const handlePlaybackTitle = () => {
-    settingsRef.current.classList.add("active");
-    playbackRef.current.classList.remove("active");
   };
 
   //quality settings
   const handleQualityBtn = () => {
     settingsRef.current.classList.remove("active");
-    playbackRef.current.classList.remove("active");
     qualityRef.current.classList.add("active");
   };
 
@@ -309,8 +227,6 @@ const VideoPlayer = (props) => {
     let timer = {
       timerUp: null,
       timerDown: null,
-      timerLeft: null,
-      timerRight: null,
     };
     const handleKeyBoard = (e) => {
       if (e.target === document.body) {
@@ -402,35 +318,6 @@ const VideoPlayer = (props) => {
               setVolumeRange(0);
             }
             break;
-
-            //fast rewind with arrowLeft key
-          case "ArrowLeft":
-            controlsRef.current.style.opacity = 1;
-            videoPlayerRef.current.style.cursor = "default";
-            fastRewindRef.current.style.display = "flex";
-            clearInterval(timer.timerLeft);
-            timer.timerLeft = setInterval(() => {
-              fastRewindRef.current.style.display = "none";
-            }, 1000);
-            if (videoRef.current.currentTime > 0) {
-              videoRef.current.currentTime = videoRef.current.currentTime - 5;
-            }
-            break;
-          
-          //fast forward with arrowRight key
-          case "ArrowRight":
-            controlsRef.current.style.opacity = 1;
-            videoPlayerRef.current.style.cursor = "default";
-            fastFrowardRef.current.style.display = "flex";
-            clearInterval(timer.timerRight);
-            timer.timerRight = setInterval(() => {
-              fastFrowardRef.current.style.display = "none";
-            }, 1000);
-            if (videoRef.current.currentTime < videoRef.current.duration) {
-              videoRef.current.currentTime = videoRef.current.currentTime + 5;
-            }
-            break;
-          
           default:
             break;
         }
@@ -488,7 +375,7 @@ useEffect(() => {
  
  },[error])
   return (
-    <>
+    <div  className="live">
     
     <div
       className="app"
@@ -519,10 +406,10 @@ useEffect(() => {
         onError={handleOnVideoError}
       ></video>
 
-      <div className="controlsContainers">
+      
         <div className="play-pause-video">
           {playing ? (
-            <span className="icon">
+            <span className="icon" >
               <i className="material-icons pause" ref={bigPausePlayRef}>
                 pause
               </i>
@@ -535,19 +422,7 @@ useEffect(() => {
             </span>
           )}
         </div>
-      </div>
-      <div className="fast-forward" ref={fastFrowardRef}>
-        <span className="icon">
-          <i className="material-icons">fast_forward</i>
-        </span>
-        <span className="plus-5-seconds">+5s</span>
-      </div>
-      <div className="fast-rewind" ref={fastRewindRef}>
-        <span className="minus-5-seconds">-5s</span>
-        <span className="icon">
-          <i className="material-icons">fast_rewind</i>
-        </span>
-      </div>
+      
       <div className="volume-control" ref={volumeRef}>
         <span className="volume-control-value">{`${volumeRange}%`}</span>
         <span className="icon">
@@ -555,25 +430,9 @@ useEffect(() => {
         </span>
       </div>
       <div ref={controlsRef} className="all-controls">
-        <div className="bottom-controls">
-          <div className="progressAreaTime" ref={progressAreaTimeRef}>0:00</div>
-          <div
-            className="progress-area"
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleOnMouseLeave}
-            onClick={handleProgressArea}
-          >
-            <div
-              style={{ width: `${progress}%` }}
-              className="progress-bar"
-            ></div>
-          </div>
-        </div>
+        
         <div className="controls-list">
           <div className="controls-left">
-            <span className="icon" onClick={revert}>
-              <i className="material-icons replay-5">replay_5</i>
-            </span>
             {playing ? (
               <span className="icon" onClick={() => videoHandler("pause")}>
                 <i className="material-icons pause" ref={pausePlayRef}>
@@ -587,9 +446,6 @@ useEffect(() => {
                 </i>
               </span>
             )}
-            <span className="icon" onClick={fastForward}>
-              <i className="material-icons forward-5">forward_5</i>
-            </span>
             <span className="icon">
               <i className="material-icons volume" onClick={muteVolume}>
                 {volumeIcon}
@@ -605,22 +461,19 @@ useEffect(() => {
             </span>
             <div className="timer">
               <span className="current">
-                {Math.floor(currentTime / 60) +
-                  ":" +
-                  ("0" + Math.floor(currentTime % 60)).slice(-2)}
-              </span>{" "}
-              /{" "}
-              <span className="duration">
-                {Math.floor(videoTime / 60) +
-                  ":" +
-                  ("0" + Math.floor(videoTime % 60)).slice(-2)}
+                {videoTime}
               </span>
             </div>
+            <div className="live-icon">
+              <span className="icon"></span>
+              Live
+            </div>
+            {/** <div className="watching">
+              {`${watching} watching now...`}
+            </div>*/}
           </div>
+          
           <div className="controls-right">
-            <span className="icon" onClick={handleAutoPlay}>
-              <i className="material-icons auto-play" ref={autoPlayRef}></i>
-            </span>
             <span className="icon" onClick={handleSettingsBtn}>
               <i className="material-icons settingsBtn" ref={settingsBtnRef}>
                 settings
@@ -636,25 +489,6 @@ useEffect(() => {
             </span>
 
             <div ref={settingsRef} id="settings">
-              <div className="content " onClick={handlePlaybackBtn}>
-                <div className="center-content">
-                  <span className="icon">
-                    <i className="material-icons ">slow_motion_video</i>
-                  </span>
-                  <span> Playback Speed</span>
-                </div>
-                <div className="value">
-                  <div className="center-content">
-                    <span style={{ fontSize: "0.9vw" }}>{videoSpeed}</span>
-                    <span
-                      className="icon"
-                      style={{ margin: "0px", padding: "0px" }}
-                    >
-                      <i className="material-icons navigate_next">navigate_next</i>
-                    </span>
-                  </div>
-                </div>
-              </div>
               <div className="content" onClick={handleQualityBtn}>
                 <div className="center-content">
                   <span className="icon">
@@ -674,36 +508,6 @@ useEffect(() => {
                   </div>
                 </div>
               </div>
-            </div>
-            <div id="playback" ref={playbackRef}>
-              <div className="content" onClick={handlePlaybackTitle}>
-                <div className="center-content">
-                  <span className="icon" style={{ margin: "0px", padding: "0px" }}>
-                    <i
-                      className="material-icons "
-                      style={{
-                        fontSize: "1.8vw",
-                      }}
-                    >
-                      navigate_before
-                    </i>
-                  </span>
-                  <span style={{ fontSize: "1vw" }}> Playback Speed </span>
-                </div>
-              </div>
-              <ul>
-                {playbackSpeedList.map((speed, index) => (
-                  <li
-                    key={index}
-                    onClick={(e) => {
-                      handlePlayback(e, speed);
-                    }}
-                    className={speed === "1" ? "active" : ""}
-                  >
-                    {speed === "1" ? "Normal" : speed}
-                  </li>
-                ))}
-              </ul>
             </div>
             <div id="quality" ref={qualityRef}>
               <div className="content" onClick={handleQualityTitle}>
@@ -753,8 +557,8 @@ useEffect(() => {
       </div>
     </div>
     
-    </>
+    </div>
   );
 };
 
-export default VideoPlayer;
+export default LivePlayer;
