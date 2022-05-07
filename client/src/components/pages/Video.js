@@ -14,8 +14,8 @@ import CheckIcon from '@mui/icons-material/Check';
 import ChatIcon from '@mui/icons-material/Chat';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import useWindowDimensions from '../../utils/useWindowDimensions';
-import VideoPlayer from '../layout/video/VideoPlayer';
-import LivePlayer from '../layout/video/LivePlayer';
+import VideoPlayer from '../video/VideoPlayer';
+import LivePlayer from '../video/LivePlayer';
 import SendIcon from '@mui/icons-material/Send';
 import { deepOrange } from '@mui/material/colors';
 import DialogContent from '@mui/material/DialogContent';
@@ -27,6 +27,7 @@ import Tag from '../layout/Tag';
 import Picker from 'emoji-picker-react';
 import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied';
 import useOutsideClick from '../../utils/useOutsideClick';
+import { hideScrollBar } from '../../utils/Style';
 
 const Video = () => {
   const { height, width } = useWindowDimensions();
@@ -179,7 +180,7 @@ const handleChannelNameClick = (channel)=>{
                 ))}
                 </Grid>
             </Grid>
-            <Grid item xs={7} sx={{ maxHeight:'100%',padding:'0.2vw', overflow:'auto', '&::-webkit-scrollbar': {display: 'none'}}} >
+            <Grid item xs={7} sx={{ maxHeight:'100%',padding:'0.2vw', overflow:'auto',...hideScrollBar}} >
             <Grid >
               {isLive ? (
                 <>

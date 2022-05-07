@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import "./videoPlayer.css";
-import useOutsideClick from "../../../utils/useOutsideClick";
-import useInsideClick from "./utils/useInsideClick";
+import useOutsideClick from "../../utils/useOutsideClick";
+import useInsideClick from "../video/utils/useInsideClick";
 import Loader from './loader/Loader';
 const VideoPlayer = (props) => {
   const videoRef = useRef(null);
