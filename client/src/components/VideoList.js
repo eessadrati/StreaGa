@@ -5,8 +5,11 @@ import PlayCircleFilledIcon from '@mui/icons-material/PlayCircleFilled';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import React,{useRef,useEffect,useState} from 'react';
 import { hideScrollBar } from '../utils/Style';
-import LiveIcon from './layout/LiveIcon';
+import LiveIcon from '../layout/LiveIcon';
 import { deepOrange } from '@mui/material/colors';
+import { bgcolor } from '@mui/system';
+import Title from './../layout/Title';
+import VideoCard from '../layout/VideoCard';
 
 const VideoList = (props) => {
     const {videoList,listTitle,sx} = props;
@@ -43,10 +46,9 @@ const handleLeftButtonClick=()=>{
     videoListRef.current.scrollLeft= videoListRef.current.scrollLeft-3*width/4;
 }
     return (
-        <Grid sx={{marginTop:'4vh' ,...sx}}>
-                    <Typography variant='body1' component='div' fontWeight='bold'>
-            {listTitle}
-        </Typography>
+        <Grid >
+        <Paper elevation={3}  sx={{bgcolor:'#fff',margin:'3vh 0vw',padding:'1vh 0.4vw',...sx}}>
+            <Title title={listTitle}/>
         <Grid container  >
 <Grid item sx={{position:'relative',overflow:'hidden'}}>
             <ImageList
@@ -68,47 +70,9 @@ const handleLeftButtonClick=()=>{
             )} 
 
 
-  {videoList.map((video) => (
-    <Paper direction='column'  sx={{marginRight:0.5, bgcolor:'white'}}>
-    <Grid   sx={{cursor:'pointer'}}>
-      <Grid sx={{position:'relative'}}>
-      <img src={"/"+video.poster} alt="video" style={{height:'26vh'}}/>
+  {videoList.map((video,index) => (
+    <VideoCard video={video} key={index}/>
       
-            <PlayCircleFilledIcon sx={{margin:0,color:'#fff',fontSize:'2.8vw',position:'absolute',left:'45%',bottom:'45%'}}/>
-        {video.isLive && (
-            <Grid sx={{position:'absolute', right:0, top:0}}>
-                <LiveIcon />
-            </Grid>
-        )}
-      </Grid>
-      
-          <Typography variant='subtitle1' component='div' sx={{height:'12vh'}}>  
-                {
-                    video.title.length >60 ? (
-                        <Grid container alignItems='center'  >
-                         <Grid  >
-                         {`${video.title.substring(0,57)}...`}
-                        {/** <ExpandMoreIcon alignItems='center'/> */}
-                        <span style={{display: "flex", alignItems: 'center',filter: 'blur(0.3px)',WebkitFilter: 'blur(0.3px)'
-  }}><ExpandMoreIcon /> show more</span>
-                         </Grid>
-                        </Grid>
-                    ) : video.title
-                } 
-          </Typography>
-          </Grid>
-      <Grid container sx={{
-                        padding:"1.4vh 0.4vw",
-                        alignItems:'center'
-                        }}
-                        >
-        <Avatar alt="profile" sx={{ bgcolor: deepOrange[500],cursor:'pointer' }} >N</Avatar>
-        <Grid sx={{paddingLeft:'0.6vw'}}>
-        <Typography variant='body1' fontSize='1.2vw' sx={{cursor:'pointer'}}>channel name</Typography>
-        </Grid>
-      </Grid>
-      </Paper>
-
     
   ))}
   {!endVideoList &&(
@@ -120,7 +84,9 @@ const handleLeftButtonClick=()=>{
 
 </Grid>
 </Grid>
-<Divider/>
+
+{/** <Divider sx={{margin:'2vh 0', bgcolor:'#000'}}/>*/}
+</Paper>
         </Grid>
     );
 };

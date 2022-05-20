@@ -1,17 +1,23 @@
 
-import React from "react";
+import React,{useState} from "react";
 import Video from "./Video";
-import {Tabs,Tab,Box, IconButton, Grid, CssBaseline} from '@mui/material';
-
+import {Tabs,Tab,Box, IconButton, Grid, CssBaseline, Typography, Divider, Paper} from '@mui/material';
+import FeedIcon from '@mui/icons-material/Feed';
 import PeopleIcon from '@mui/icons-material/People';
 import { Link, Outlet } from "react-router-dom";
 import Videos from "../Videos";
 import Blogs from "../Blogs";
+import HomeIcon from '@mui/icons-material/Home';
 import useWindowDimensions from './../../utils/useWindowDimensions';
+import Title from './../../layout/Title';
+import { hideScrollBar } from "../../utils/Style";
+import AvaTy from './../../layout/AvaTy';
+
 
 const Home = () => {
-  const [value, setValue] = React.useState('all');
+  const [value, setValue] = useState('home');
   const {height}=useWindowDimensions();
+  const followedChannels = [{srcImg:'/eye.webp',name:"channel1",id:"1"},{srcImg:'',name:"channel2",id:"2"},{srcImg:'/eye.webp',name:"channel3",id:"3"}];
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -20,22 +26,28 @@ const Home = () => {
     <>
     <CssBaseline/>
     <Grid container sx={{height:height,overflow:'hidden'}}>
-      <Grid item xs={2} sx={{bgcolor:'red'}}>
-        followed channels 
+      <Grid item xs={2} sx={{height:height,overflow:'auto',...hideScrollBar}}>
+        <Paper variant="outlined"  sx={{bgcolor:'background.secondary',padding:'1vh 0.4vw'}}>
+        <Title title="Followed channels" />
+        <Divider/>
+        {followedChannels.map((channel,index)=>(
+          <AvaTy srcImg={channel.srcImg} name={channel.name} key={index} sx={{'&:hover':{
+                                                  cursor:'pointer',
+                                                  backgroundColor:'#f5f5f5'
+                                                }}}/>
+        ))}
+        </Paper>
       </Grid>
       <Grid item xs={10} >
       <Tabs
         value={value}
         onChange={handleChange}
-        sx={{height:height/15}}>
-        <Tab value="all" label="All" sx={{textTransform:'none',fontSize:'1.3vw'}}/>
-        <Tab value="videos" label="videos" sx={{textTransform:'none',fontSize:'1.3vw'}} />
-        <Tab value="blog" label="News & Reviews" sx={{textTransform:'none',fontSize:'1.3vw'}} />
+        sx={{height:height/15}}
+        >
+        <Tab value="home" label={<>{getIcon("home") }home</>}  iconPosition="start" sx={{textTransform:'none',fontSize:'1.5vw'}} />
+        <Tab value="blog" label={<>{getIcon("blog")}News & Reviews</>} iconPosition="start"  sx={{textTransform:'none',fontSize:'1.3vw'}} />
       </Tabs>
-      {value === 'all' && <>
-        <div>test</div>
-      </>}
-      {value === 'videos' && <Videos/>}
+      {value === 'home' && <Videos/>}
       {value === 'blog' && <Blogs/>}
       </Grid>
       
@@ -74,3 +86,22 @@ const Home = () => {
 };
 
 export default Home;
+
+
+const getIcon=(type)=>{
+  if(type==="blog"){
+    return(
+      <>
+        <FeedIcon/>
+      </>
+    )
+  }else{
+    return (
+      <>
+        <HomeIcon/>
+      </>
+    )
+  }
+  
+}
+

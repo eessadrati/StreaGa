@@ -21,13 +21,16 @@ import { deepOrange } from '@mui/material/colors';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle  from '@mui/material/DialogTitle';
-import TagsInput from '../layout/TagsInput';
-import InputField from '../layout/InputField';
-import Tag from '../layout/Tag';
+import TagsInput from '../../layout/TagsInput';
+import InputField from '../../layout/InputField';
+import Tag from '../../layout/Tag';
 import Picker from 'emoji-picker-react';
 import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied';
 import useOutsideClick from '../../utils/useOutsideClick';
 import { hideScrollBar } from '../../utils/Style';
+import LikeButton from '../../layout/LikeButton';
+import InputMessage from './../../layout/InputMessage';
+import Title from '../../layout/Title';
 
 const Video = () => {
   const { height, width } = useWindowDimensions();
@@ -75,7 +78,7 @@ const Video = () => {
     const handleChatMemberClick = (member)=>{
       console.log(member)
     }
-    const handleLike = ()=>{
+    const handleLikeClick = ()=>{
       if(isLiked){
         console.log("unlike")
         setLikes(l=>l-1)
@@ -113,43 +116,21 @@ const Video = () => {
     const handleTagClick = (item)=>{
       console.log(item+" clicked")
     }
-    const handleSendMessage = ()=>{
-      if(messageRef.current.value.length>0){
-        setChat(c=>[...c,{id:chat.length+1,
-                          name:"test",
-                          message:messageRef.current.value,
-                          color:getRandomColor()}])
-        messageRef.current.value = "";
-      }
-    }
+   
 
 
-    const handleInputEnter = (e)=>{
-     
-      if(e.key==="Enter"){
-         e.preventDefault()
-        console.log("enter")
-        //call send message function
-        handleSendMessage()
-        e.target.blur()
-        e.target.focus()
-        console.log(messageRef.current.value)
-      }
-    }
-    const [chosenEmoji, setChosenEmoji] = useState(null);
-  useEffect(() => {
-    const message=messageRef.current.value;
-    if(chosenEmoji){
-    messageRef.current.value=message+chosenEmoji.emoji
-console.log("msg"+ messageRef.current.value)
-    }
-
-  },[chosenEmoji])
-    const onEmojiClick = (event, emojiObject) => {
-      setChosenEmoji(emojiObject);
-    };
+    
+ 
+    
 const handleChannelNameClick = (channel)=>{
   console.log(channel)
+}
+const handleMessage=(message)=>{
+  console.log("hh"+message)
+  setChat(c=>[...c,{id:chat.length+1,
+    name:"test",
+    message:message,
+    color:getRandomColor()}])
 }
     const srcQuality = [ { label: "240p", src: "link" }, { label: "360p", src: "lik" },
     { label: "480p", src: "480p" },{ label: "720p", src: "720p" },{ label: "1080p", src: "1080p" },];
@@ -158,9 +139,10 @@ const handleChannelNameClick = (channel)=>{
         <CssBaseline/> 
          <Grid container sx={{ height:height,overflow:'hidden'}}>
             <Grid item xs={2} sx={{maxHeight:'100%',...customScrollBar}}>
-                <Typography sx={{fontWeight:'bold'}} variant='h6' component='div'>Followed channel</Typography>
+               <Title title="Followed Channels" />
                 <Divider/>
                 <Grid sx={{marginTop:'1.5vh'}} >
+                {/**<AvaTy srcImg={channel.srcImg} name={channel.name} key={index}/> */}
                 {followedChannels.map((channel,index)=>(
                 <Grid container  key={index} sx={{
                                                 padding:"1.4vh 0.4vw",
@@ -171,6 +153,7 @@ const handleChannelNameClick = (channel)=>{
                                                 alignItems='center'
                                                 onClick={()=>{handleChannelNameClick(channel)}}
                                               >
+                                              {/**i will use here avaty */}
                       <Avatar alt="profile" sx={{ bgcolor: deepOrange[500] }}>N</Avatar>
                       <Grid sx={{paddingLeft:'0.6vw'}}>
                       <Typography variant='body1' fontSize='1.2vw'>{channel}</Typography>
@@ -284,8 +267,7 @@ const handleChannelNameClick = (channel)=>{
                     alignItems="center" justifyContent="center"
                                              >
                 
-                 { isLiked ? <FavoriteIcon onClick={handleLike} sx={{ fontSize: '2.5vw',...hover}}/> 
-                           : <FavoriteBorderIcon onClick={handleLike} sx={{ fontSize: '2.5vw',...hover }}/>}
+                <LikeButton isLiked={isLiked} onClick={handleLikeClick}/>
                  
                 <Typography variant='body1' fontSize='1.3vw'>
                     { `${convertViewers(likes)}`}
@@ -399,7 +381,7 @@ const handleChannelNameClick = (channel)=>{
                     </Grid>
                     )}
                
-                {emojiPickerOpen && <Grid ref={emojiPickerRef} >
+                {/**emojiPickerOpen && <Grid ref={emojiPickerRef} >
                 <Grid container justifyContent="flex-end" sx={{paddingRight:"0.4vw"}}>
                     <IconButton  onClick={()=>setEmojiPickerOpen(false)}>
                       <CloseIcon/>
@@ -407,12 +389,12 @@ const handleChannelNameClick = (channel)=>{
                 </Grid>
                 <Picker pickerStyle={{width:'auto'}} onEmojiClick={onEmojiClick} />
                 </Grid>
-                 }
+                 */ }
                  </Grid> 
                 <Grid sx={{ height:3*height/16}}>
                 
-                  <Grid container sx={{height:'100%'}}>
-                    <Grid item xs={10}>
+                  <Grid container sx={{height:'100%',position:'relative'}}>
+                    {/**<Grid item xs={10}>
                         <InputField 
                               fullWidth
                               multiline
@@ -427,15 +409,21 @@ const handleChannelNameClick = (channel)=>{
                                               sx={{cursor:'pointer'}}
                                               ref={btnEmojiPickerRef}
                                               onClick={()=>setEmojiPickerOpen(prv=>!prv)} />}}
+                              /> */}
+                              <InputMessage handleMessage={handleMessage}
+                              EndAdornement={endAdornement}
+                              inputStyle={{borderRadius:'8px',border:'1px solid #ccc'}}
+                              sx={{margin:'0.6vh 0vh'}}
+                              placeholder='Message...'
                               />
-                    </Grid>
-                    <Grid item xs={2} sx={{marginTop:'3vh'}}>
+                   {/** </Grid>
+                     <Grid item xs={2} sx={{marginTop:'3vh'}}>
                         
                         <IconButton  aria-label="Send" component="span"
                                       onClick={handleSendMessage}>
                           <SendIcon />
                         </IconButton>
-                    </Grid>
+                    </Grid>*/}
                   </Grid>
                  
                 </Grid>
@@ -484,6 +472,17 @@ const handleChannelNameClick = (channel)=>{
     );
 };
 
+const endAdornement=(props)=>{
+ return (
+  <Grid {...props} >
+                        
+  <IconButton  aria-label="Send" component="span">
+                
+    <SendIcon />
+  </IconButton>
+</Grid>
+)
+}
 
 //generate random color
 const getRandomColor = () => {

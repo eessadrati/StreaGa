@@ -6,7 +6,8 @@ import Router from "./routes/Router";
 const theme = createTheme({
   palette: {
     background: {
-      paper: '#000',
+      primary: '#F7F7F8',
+      secondary: '#fafafa',
     },
     text: {
       primary: '#000',

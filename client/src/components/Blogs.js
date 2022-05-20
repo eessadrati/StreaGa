@@ -1,14 +1,22 @@
 import React from 'react';
-import { Box, Grid } from '@mui/material';
+import {Grid } from '@mui/material';
 import Blog from './Blog';
+import useWindowDimensions from '../utils/useWindowDimensions';
 
 const Blogs = () => {
+    const blog="blog";
+    const {height}=useWindowDimensions();
     return (
-        <Grid container alignItems="center" justifyContent="center">
+        <Grid container alignItems="center" sx={{maxHeight:height-height/15, overflow:'auto'}} justifyContent="center">
 
            <Grid item xs={6}>
-            <Blog listTitle="News & Reviews" />
+            <Blog blog={blog} />
+            <Blog blog={blog} />
+            <Blog blog={blog} />
+            <Blog blog={blog} />
+            <Blog blog={blog} />
             </Grid>
+
         </Grid>
     );
 };
