@@ -16,6 +16,11 @@ const theme = createTheme({
     action: {
       active: '#001E3C',
     },
+    error:{
+      main:'#ff0033',
+      primary:'#ff0033',
+
+    }
   },
 });
 
