@@ -4,6 +4,7 @@ import Video from "./Video";
 import {Tabs,Tab,Box, IconButton, Grid, CssBaseline, Typography, Divider, Paper} from '@mui/material';
 import FeedIcon from '@mui/icons-material/Feed';
 import PeopleIcon from '@mui/icons-material/People';
+import EventIcon from '@mui/icons-material/Event';
 import { Link, Outlet } from "react-router-dom";
 import Videos from "../Videos";
 import Blogs from "../Blogs";
@@ -46,9 +47,11 @@ const Home = () => {
         >
         <Tab value="home" label={<>{getIcon("home") }home</>}  iconPosition="start" sx={{textTransform:'none',fontSize:'1.5vw'}} />
         <Tab value="blog" label={<>{getIcon("blog")}News & Reviews</>} iconPosition="start"  sx={{textTransform:'none',fontSize:'1.3vw'}} />
+        <Tab value="event" label={<>{getIcon("event")} Events</>} iconPosition="start"  sx={{textTransform:'none',fontSize:'1.3vw'}} />
       </Tabs>
       {value === 'home' && <Videos/>}
       {value === 'blog' && <Blogs/>}
+      {value === 'event' && <Blogs/>}
       </Grid>
       
     </Grid>
@@ -95,7 +98,13 @@ const getIcon=(type)=>{
         <FeedIcon/>
       </>
     )
-  }else{
+  }else if(type==="event"){
+    return (
+      <>
+        <EventIcon/>
+      </>
+    )
+  }else {
     return (
       <>
         <HomeIcon/>
