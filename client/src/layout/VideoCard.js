@@ -68,13 +68,14 @@ const VideoCard = (props) => {
           </Typography>
         </Grid>
         {video.channelId && video.channelName  ? (
+
           <Grid
-          container
+          
           sx={{
-            padding: "1.4vh 0.4vw",
-            alignItems: "center",
+            margin: "1.4vh 0.4vw",
           }}
         >
+        
           <AvaTy srcImg={video.channelProfile} name={video.channelName} />
         </Grid>
         ):null}

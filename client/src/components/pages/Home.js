@@ -13,6 +13,7 @@ import useWindowDimensions from './../../utils/useWindowDimensions';
 import Title from './../../layout/Title';
 import { hideScrollBar } from "../../utils/Style";
 import AvaTy from './../../layout/AvaTy';
+import Events from './../Events';
 
 
 const Home = () => {
@@ -51,7 +52,7 @@ const Home = () => {
       </Tabs>
       {value === 'home' && <Videos/>}
       {value === 'blog' && <Blogs/>}
-      {value === 'event' && <Blogs/>}
+      {value === 'event' && <Events/>}
       </Grid>
       
     </Grid>
