@@ -84,6 +84,7 @@ export default function Channel() {
             </Grid>
         </Grid> 
     </Grid>
+    <br/><br/>
     </Grid>
   )
 }
