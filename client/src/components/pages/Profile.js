@@ -13,6 +13,7 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import Channel from "../../layout/AvaTy"
 import PersonalInfos from '../PersonalInfos'
 import ChangePwd from '../ChangePwd'
+import CreateChannel from '../CreateChannel'
 
 const BootstrapButton = styled(Button)({
     boxShadow: 'none',
@@ -28,7 +29,8 @@ const BootstrapButton = styled(Button)({
 const Profile = () => {
     const {height}=useWindowDimensions();
     const [value, setValue] = useState('Personal Infos');
-    const [editPostIsOpen, setEditPostIsOpen] = useState(false);
+    const [editInfosIsOpen, setEditInfosIsOpen] = useState(false);
+    const [createChannelIsOpen, setCreateChannelIsOpen] = useState(false);
     const [dialogIsOpen, setDialogIsOpen] = useState(false)
     const dialogRef=useRef(null);
     const moreButtonRef=useRef(null);
@@ -38,12 +40,17 @@ const Profile = () => {
     };
 
     useOutsideClick(dialogRef,moreButtonRef,() => setDialogIsOpen(false));
-    const editePost=()=>{
-        setEditPostIsOpen(true);
+    
+    const editPost=()=>{
+        setEditInfosIsOpen(true);
+    }
+    
+    const createChannel = () => {
+        setCreateChannelIsOpen(true);
     }
 
     const handleSavePost=()=>{
-        setEditPostIsOpen(false);
+        setEditInfosIsOpen(false);
 
     }
 
@@ -66,7 +73,13 @@ const Profile = () => {
                     <Channel srcImg='profile.jpg' name="chaine dial zwamel" onClick={() => { alert("No available channels")}} sx={styles.channelsList}/>
                     <Channel srcImg='profile.jpg' name="chaine dial lqhab" sx={styles.channelsList} />
                     <Channel srcImg='profile.jpg' name="chaine dial zwamel 2" sx={styles.channelsList} />
-                    <Button  variant="contained" sx={styles.button} >Create New Channel</Button>
+                    <Button  
+                        variant="contained"
+                        sx={styles.button}
+                        onClick={createChannel}
+                    >
+                        Create New Channel
+                    </Button>
                 </Grid>
             </Grid>
 
@@ -93,7 +106,7 @@ const Profile = () => {
                         Personal information
                     </Typography>
                     <EditIcon 
-                        onClick={editePost}
+                        onClick={editPost}
                     />
                 </Grid>
                 <Divider sx={{marginRight:'160px', marginBottom:'30px'}} />
@@ -143,13 +156,13 @@ const Profile = () => {
 
             <Dialog
                 fullWidth
-                open={editPostIsOpen}
+                open={editInfosIsOpen}
                 >
                 <DialogTitle sx={{m:'0',p:'1.5vh 0.4vw' }}>
                   Edit profile
                 <IconButton
                     aria-label="close"
-                    onClick={()=>setEditPostIsOpen(false)}
+                    onClick={()=>setEditInfosIsOpen(false)}
                     sx={{
                         position: 'absolute',
                         right: 8,
@@ -175,7 +188,39 @@ const Profile = () => {
                     </Grid>
                   </DialogContent>
                   <DialogActions>
-                    <Button autoFocus onClick={()=>setEditPostIsOpen(false)}>
+                    <Button autoFocus onClick={()=>setEditInfosIsOpen(false)}>
+                      Cancel
+                    </Button>
+                    <Button autoFocus onClick={handleSavePost}>
+                      Save
+                    </Button>
+                  </DialogActions>
+              </Dialog>
+
+              <Dialog
+                fullWidth
+                open={createChannelIsOpen}
+                >
+                <DialogTitle sx={{m:'0',p:'1.5vh 0.4vw' }}>
+                  Create new channel
+                <IconButton
+                    aria-label="close"
+                    onClick={()=>setCreateChannelIsOpen(false)}
+                    sx={{
+                        position: 'absolute',
+                        right: 8,
+                        top: 8,
+                        color: (theme) => theme.palette.grey[500],
+                    }}
+                    >
+                    <CloseIcon />
+                </IconButton>
+                </DialogTitle>
+                <DialogContent dividers>
+                    <CreateChannel />
+                  </DialogContent>
+                  <DialogActions>
+                    <Button autoFocus onClick={()=>setCreateChannelIsOpen(false)}>
                       Cancel
                     </Button>
                     <Button autoFocus onClick={handleSavePost}>
