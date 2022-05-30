@@ -72,6 +72,7 @@ const Blog = (props) => {
     const deletePost=()=>{
 
     }
+
     return (
         <>
         <Paper elevation={2} sx={{position:'relative', bgcolor:'#fff',margin:'3vh 0vw',padding:'1vh 0.1vw', paddingTop:'0vh',...sx}}>
@@ -126,20 +127,16 @@ const Blog = (props) => {
             </Grid> 
          
             <Divider sx={{marginTop:'2vh'}}/>
-         <Grid container item  sx={{paddingLeft:'0.3vw', paddingBottom:'0.5vh'}} direction="row" alignItems="center"
-                                             >
-                <Grid item   >
-                <LikeButton isLiked={isLiked} onClick={handleLikeClick}/>
+                <Grid container item  sx={{paddingLeft:'0.3vw', paddingBottom:'0.5vh'}} direction="row" alignItems="center" >
+                    <Grid item   >
+                        <LikeButton isLiked={isLiked} onClick={handleLikeClick}/>
+                    </Grid>
+                    <Grid  item >
+                        <Typography variant='body1' fontSize='1.3vw' sx={{marginLeft:'0.1vw'}}>
+                            {isLiked ? `you and ${likes} others`:`${likes} people `}
+                        </Typography>                       
+                    </Grid>
                 </Grid>
-                <Grid  item >
-                    
-                    <Typography variant='body1' fontSize='1.3vw' sx={{marginLeft:'0.1vw'}}>
-                        {isLiked ? `you and ${likes} others`:`${likes} people `}
-                    </Typography>
-                    
-                </Grid>
-                
-              </Grid>
            
         {/**<Divider sx={{marginBottom:'2vh'}}/>
          <Grid  sx={{position:'relative'}}>
@@ -156,36 +153,36 @@ const Blog = (props) => {
             {dialogIsOpen &&(
                 <>
                 <Grid container   sx={{
-            position: "absolute",
-            top: "6vh",
-            left: "45%",
-            width:'auto',
-            }}
-            ref={dialogRef}>
+                position: "absolute",
+                top: "6vh",
+                left: "45%",
+                width:'auto',
+                }}
+                ref={dialogRef}>
         {/** <MoreButtonDialog open={dialogIsOpen} onClose={closeDialog} />*/} 
-       <Paper elevation={8} sx={{width:'20vw'}}>
-        <Typography variant='body1'
-                    onClick={editePost}
-                     fontSize='1.3vw' sx={{padding:'2vh 1.5vw','&:hover':{
-            backgroundColor:'#f5f5f5',
-            cursor:'pointer'
-        } }}>
-            Edite post
-        </Typography>
-        <Divider/>
-        <Typography variant='body1' 
-                    fontSize='1.3vw'
-                    onClick={deletePost}
-                    sx={{padding:'2vh 1.5vw','&:hover':{
-                    backgroundColor:'#f5f5f5',
-                    cursor:'pointer'
-                    }}}>
-            Delete post
-        </Typography>
+        <Paper elevation={8} sx={{width:'20vw'}}>
+            <Typography variant='body1'
+                        onClick={editePost}
+                        fontSize='1.3vw' sx={{padding:'2vh 1.5vw','&:hover':{
+                        backgroundColor:'#f5f5f5',
+                        cursor:'pointer'
+            } }}>
+                Edite post
+            </Typography>
+            <Divider/>
+            <Typography variant='body1' 
+                        fontSize='1.3vw'
+                        onClick={deletePost}
+                        sx={{padding:'2vh 1.5vw','&:hover':{
+                        backgroundColor:'#f5f5f5',
+                        cursor:'pointer'
+                        }}}>
+                Delete post
+            </Typography>
         </Paper>
         </Grid>
         </>
-            )}
+        )}
         </Paper>
         <Dialog
                   fullWidth
