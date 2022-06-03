@@ -1,11 +1,8 @@
-import React from 'react';
+import React from "react";
 
 const Login = () => {
-    return (
-        <div>
-            login page
-        </div>
-    );
+  const [isConnected, setIsConnected] = React.useState(false);
+  return <div>login page</div>;
 };
 
 export default Login;
