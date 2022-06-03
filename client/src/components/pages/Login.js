@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-import React from "react";
-
-const Login = () => {
-  const [isConnected, setIsConnected] = React.useState(false);
-  return <div>login page</div>;
-=======
 import React, { useState } from "react";
 import {
   Container,
@@ -156,7 +149,6 @@ const Login = () => {
         </Container>
       </>
     );
->>>>>>> origin/essadrati
 };
 
 export default Login;

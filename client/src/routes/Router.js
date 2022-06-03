@@ -9,7 +9,6 @@ import Navbar from "../components/pages/Navbar";
 import SearchPage from "../components/pages/SearchPage";
 
 const Router = () => {
-<<<<<<< HEAD
   //const {user} = useContext(AuthContext);
 
   return (

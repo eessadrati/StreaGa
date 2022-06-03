@@ -1,14 +1,3 @@
-<<<<<<< HEAD
-import React from "react";
-import Navbar from "./Navbar";
-
-const Home = () => {
-  return <div>home page</div>;
-};
-
-export default Home;
-=======
-
 import React,{useState} from "react";
 import Video from "./Video";
 import {Tabs,Tab,Box, IconButton, Grid, CssBaseline, Typography, Divider, Paper} from '@mui/material';
@@ -125,4 +114,3 @@ const getIcon=(type)=>{
   
 }
 
->>>>>>> origin/essadrati
