@@ -25,22 +25,6 @@ const Router = () => {
       </Routes>
     </BrowserRouter>
   );
-=======
-    //const {user} = useContext(AuthContext);
-    
-    return (
-        <BrowserRouter>
-            <Routes> 
-            <Route exact path="/" element={<Home/>}>
-            </Route>
-            <Route  path="/profile" element={<Profile/>} />
-            <Route path="/login" element={<Login/>} />
-            <Route path="/signup" element={<Signup/>} />
-            <Route path="*" element={<ErrorPage/>}/>
-            </Routes>
-        </BrowserRouter>
-    );
->>>>>>> origin/essadrati
 };
 
 export default Router;
