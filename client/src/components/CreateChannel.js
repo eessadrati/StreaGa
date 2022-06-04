@@ -1,15 +1,32 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { Grid, Button, CssBaseline, Divider, Typography,  } from '@mui/material/'
 import InputField from './../layout/InputField'
+import TagsInput from './../layout/TagsInput'
 
 function CreateChannel() {
+  const [tagsList,setTagsList]=useState([]);
+
+  const handleTagsList =(items) =>{
+    console.log(items)
+    setTagsList(items);
+  }
+
   return (
-    <Grid container direction="column" spacing={1} sx={styles.container}>
-        <Grid item >
-            <InputField id="outlined-basic" label="Channel name" variant="outlined" />
+    <Grid container direction="row" spacing={1} sx={styles.container}>
+        <Grid item xs={12}>          
+            <InputField  id="outlined-basic" label="Channel name" variant="outlined" sx={{width:'400px'}}/>
         </Grid>
-        <Grid item >
-            <InputField id="outlined-basic" label="Add tags" variant="outlined" />
+        <Grid item sx={{marginTop:'2vh'}}>
+            <TagsInput 
+            sx={{width:'400px'}}
+            selectedTags={handleTagsList}
+            variant="outlined"
+            id="tags"
+            name="tags"
+            tags={tagsList}
+            placeholder="add tag"
+            id="outlined-basic" label="Tags" variant="outlined" 
+            />
         </Grid>
     </Grid>
   )
@@ -18,8 +35,6 @@ function CreateChannel() {
 const styles = {
     container: {
         marginLeft: '10px',
-        display: 'flex',
-        flexDirection: 'row'
     },
     button: {
         alignItems:'right' //??

@@ -55,9 +55,8 @@ const Blog = (props) => {
         setEditPostIsOpen(true);
     }
     const handleTagsList =(items) =>{
-        console.log(items)
        setTagsList(items);
-      }
+    }
       const handleblogTitleChange=(e)=>{
                setBlogTitle(e.target.value);
       }
