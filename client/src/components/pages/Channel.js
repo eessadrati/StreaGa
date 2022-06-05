@@ -1,21 +1,22 @@
-import React from 'react'
+import React, {useState} from 'react'
 import Avatar from '@mui/material/Avatar';
-import { Grid, Button, CssBaseline, Divider, Typography } from '@mui/material/';
+import { Grid, Button, CssBaseline, Divider, Typography, Chip, Tab, Tabs } from '@mui/material/';
 import Video from "../../layout/VideoCard";
 import Profile from "../../layout/AvaTy"
+import UploadedVideos from '../UploadedVideos'
+import FollowersList from '../FollowersList'
 
 
 export default function Channel() {
-    const video= {
-        id:'',
-        src:'/eye.webp',poster:'eye.webp',isLive:true,title:'title',channelId:'',channelName:'channel', channelProfile:'/eye.webp',views:2,
-    }
-    const posterStyle = {
-        width: '100%',
+    const [value, setValue] = useState('uploaded videos');
+    const handleChange = (event, newValue) => {
+        setValue(newValue)
+    };
+    const handleClick = {
+
     }
 
   return (
-
     <Grid container direction="row">
         <CssBaseline />
     <Grid item xs={2} >
@@ -24,6 +25,11 @@ export default function Channel() {
             <Typography>
                 lorem ipsum dolor lorem ipsumùùù dolor lorem ipsum dolor lorem ipsum dolor lorem ipsumùùù dolor lorem ipsum dolor lorem ipsum dolor lorem ipsumùùù dolor lorem ipsum dolor  
             </Typography>
+        </Grid>
+        <Grid sx={styles.sidebar_div} spacing={2}>
+            <Typography variant="h5">Tags</Typography>
+            <Chip label="Valorant" onClick={handleClick} />
+            <Chip label="Fifa22" onClick={handleClick} />
         </Grid>
         <Grid sx={styles.sidebar_div}>
             <Typography variant="h5">Statistics</Typography>
@@ -53,38 +59,17 @@ export default function Channel() {
         </Grid>
 
         
-        <Grid container spacing="20" sx={styles.videosContainer}>
-            
-            <Grid xs={12}>
-            <Divider/>
-                <h2>Uploaded videos</h2>
-            </Grid>
-            
-            <Grid item xs={4}>
-                <Video video={video} posterStyle={posterStyle} /> 
-            </Grid>
-            <Grid item xs={4}>
-                <Video video={video} posterStyle={posterStyle} /> 
-            </Grid>
-            <Grid item xs={4}>
-                <Video video={video} posterStyle={posterStyle} /> 
-            </Grid>
-            <Grid item xs={4}>
-                <Video video={video} posterStyle={posterStyle} /> 
-            </Grid>
-            <Grid item xs={4}>
-                <Video video={video} posterStyle={posterStyle} /> 
-            </Grid>
-
-            <Grid item xs={4}>
-                <Video video={video} posterStyle={posterStyle} /> 
-            </Grid>
-            <Grid item xs={4}>
-                <Video video={video} posterStyle={posterStyle} /> 
-            </Grid>
-            <Grid item xs={4}>
-                <Video video={video} posterStyle={posterStyle} /> 
-            </Grid>
+        <Grid container direction="column" sx={styles.videosContainer}>
+            <Tabs
+                value={value}
+                onChange={handleChange}
+                sx={styles.tabs}
+            >
+                <Tab value="uploaded videos" label={<Typography variant="h6" >Uploaded videos</Typography>}  sx={{textTransform:'none'}} />
+                <Tab value="followers" label={<Typography variant="h6" >Followers</Typography>} sx={{textTransform:'none'}} />
+            </Tabs>
+            {value === 'uploaded videos' && <UploadedVideos/>}
+            {value === 'followers' && <FollowersList/>}
         </Grid> 
     </Grid>
     <br/><br/>
@@ -126,5 +111,8 @@ const styles = {
     followers: {
         marginRight: '20px',
         width: '100%',
+    },
+    tabs: {
+        marginBottom: '24px',
     },
 }
