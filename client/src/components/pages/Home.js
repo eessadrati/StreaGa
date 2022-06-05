@@ -26,7 +26,7 @@ const Home = () => {
   return (
     <>
     <CssBaseline/>
-    <Grid container sx={{height:height,overflow:'hidden'}}>
+    <Grid container direction="row" sx={{ overflow:'hidden'}}>
       <Grid item xs={2} sx={{height:height,overflow:'auto',...hideScrollBar}}>
         <Paper variant="outlined"  sx={{bgcolor:'background.secondary',padding:'1vh 0.4vw'}}>
         <Title title="Followed channels" />

@@ -6,8 +6,7 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 
 const DateTimeField = (props) => {
     const { label,value,onDateChange,errorMessage} = props;
-   const [valuee, setValue] = useState(new Date());
-   console.log(valuee);
+   
   /* useEffect(() => {
      onChangee();
     }, [valuee,onChangee]);*/

@@ -2,7 +2,7 @@ import React from "react";
 import Navbar from "./Navbar";
 
 const Profile = () => {
-  return <div>profile</div>;
+  return <div>profileprofileprofileprofileprofileprofileprofileprofileprofileprofile</div>;
 };
 
 export default Profile;

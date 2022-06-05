@@ -13,6 +13,7 @@ import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
 import { Link, useNavigate } from "react-router-dom";
 import Login from "@mui/icons-material/Login";
+import { Grid } from "@mui/material";
 
 export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -28,7 +29,7 @@ export default function AccountMenu() {
 
   return (
     <>
-      {isLoggedIn == false ? (
+      {isLoggedIn === false ? (
         <Button
           variant="contained"
           sx={{ bgcolor: "black", bottom: -5, right: 3 }}
@@ -56,7 +57,7 @@ export default function AccountMenu() {
                 aria-controls={open ? "account-menu" : undefined}
                 aria-haspopup="true"
                 aria-expanded={open ? "true" : undefined}
-                style={{ bottom: -3, right: 3 }}
+                
               >
                 <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
               </IconButton>
@@ -70,41 +71,23 @@ export default function AccountMenu() {
             onClose={handleClose}
             onClick={handleClose}
             PaperProps={{
-              elevation: 0,
-              sx: {
-                overflow: "visible",
-                filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-                mt: 1.5,
-                "& .MuiAvatar-root": {
-                  width: 32,
-                  height: 32,
-                  ml: -0.5,
-                  mr: 1,
-                },
-                "&:before": {
-                  content: '""',
-                  display: "block",
-                  position: "absolute",
-                  top: 0,
-                  right: 14,
-                  width: 10,
-                  height: 10,
-                  bgcolor: "background.paper",
-                  transform: "translateY(-50%) rotate(45deg)",
-                  zIndex: 0,
-                },
-              },
+              elevation: 10,
+              sx: {...styles },
+              
             }}
             transformOrigin={{ horizontal: "right", vertical: "top" }}
             anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+            
           >
-            <div>
-              <MenuItem component={Link} to="/Profile">
-                <ListItemIcon>
+            <Grid >
+
+              <MenuItem component={Link} to="/Profile"   >
+              <ListItemIcon>
                   <Avatar fontSize="small" />
-                </ListItemIcon>
+                  </ListItemIcon>
                 Profile
               </MenuItem>
+            
               <MenuItem component={Link} to="/">
                 <ListItemIcon>
                   <Logout fontSize="small" />
@@ -117,10 +100,38 @@ export default function AccountMenu() {
                 </ListItemIcon>
                 Settings
               </MenuItem>
-            </div>
+            </Grid>
           </Menu>
         </>
       )}
     </>
   );
 }
+
+const styles = {
+  overflow: "visible",
+  filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+  mt: 0.7,
+  "& .MuiAvatar-root": {
+    width: 32,
+    height: 32,
+    ml: -0.5,
+    mr: 0.7,
+  },
+  '& .MuiMenu-list': {
+    padding: '0 0',
+    margin: '0 0',
+  },
+  "&:before": {
+    content: '""',
+    display: "block",
+    position: "absolute",
+    top: 0,
+    right: 14,
+    width: 10,
+    height: 10,
+    bgcolor: "background.paper",
+    transform: "translateY(-50%) rotate(45deg)",
+    zIndex: 0,
+  }
+};

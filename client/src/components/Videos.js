@@ -26,7 +26,7 @@ const Videos = () => {
 
     
     return (
-        <Grid sx={{maxHeight:height-height/15, overflow:'auto',...hideScrollBar}}>
+        <Grid sx={{maxHeight:height-height/7, overflow:'auto',...hideScrollBar}}>
         <VideoList videoList={videoList} listTitle={"Videos from followed channels"}/>
         <VideoList videoList={videoList} listTitle={"chi haja kayn hna"}/>
         <VideoList videoList={videoList} listTitle={"chi haja kayn hna 2"}/>

@@ -1,22 +1,23 @@
 import React from "react";
 import Filter from "./Filter";
-import Navbar from "./Navbar";
-import Checkbox from "@mui/material/Checkbox";
-import FormGroup from "@mui/material/FormGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
+import { Grid,CssBaseline } from "@mui/material";
 
 function SearchPage() {
-  const [value, setValue] = React.useState("");
-
-  const handleChange = (event) => {
-    setValue(event.target.value);
+  
+  const filterList = ["Lives","Videos", "Blogs", "Events"];
+  const handleOptions = (selectedOptions) => {
+    console.log("selectedOptions");
+    console.log(selectedOptions);
   };
   return (
-    <div>
-      <FormControl component="fieldset" sx={{ marginLeft: "250px" }}>
-        <FormGroup aria-label="position" row>
+    <>
+    <CssBaseline />
+      <Grid>
+      <Grid  sx={{marginLeft:'17vw'}}>
+            <Filter options={filterList} handleOptions={handleOptions} />
+      </Grid>
+      {/** <FormControl component="fieldset" sx={{ marginLeft: "4px" }}>
+        <FormGroup  row>
           <FormControlLabel
             value="video"
             control={<Checkbox />}
@@ -42,9 +43,10 @@ function SearchPage() {
             labelPlacement="end"
           />
         </FormGroup>
-      </FormControl>
-      <Filter />
-    </div>
+      </FormControl>*/}
+      
+      </Grid>
+    </>
   );
 }
 export default SearchPage;
