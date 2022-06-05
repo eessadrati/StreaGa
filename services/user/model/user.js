@@ -8,8 +8,7 @@ const UserSchema = new mongoose.Schema({
         unique : true
     },
     about   : {
-        type : String,
-        required : true
+        type : String
     },
     email : {
         type : String,
@@ -39,20 +38,21 @@ const UserSchema = new mongoose.Schema({
         default : false
     },
     birthDate : {
-        type : Date,
-        required : true
+        type : Date
     },
     country : {
-        type : String,
-        required : true
+        type : String
     },
     channelId : {
         type : String,
         
     },
-    sexuality : {
-        type : String,
-        required : true
+    gender : {
+        type : String
+    },
+    salt: {type : String},
+    hashed_password: {
+        type: String
     },
     following : [{type: ObjectId, ref: 'User'}],
     followers : [{type: ObjectId, ref: 'User'}],

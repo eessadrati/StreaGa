@@ -1,6 +1,5 @@
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
-const { isMatch } = require('lodash');
 const bcrypt = require('bcryptjs');
 const expressjwt = require('express-jwt');
 
