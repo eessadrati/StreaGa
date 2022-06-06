@@ -17,7 +17,7 @@ const AddEvent = (props) => {
     const [titleError, setTitleError] = useState("");
     const [game, setGame] = useState("");
     const [gameError, setGameError] = useState("");
-    const [participantsNumber, setParticipantsNumber] = useState('');
+    const [participantsNumber, setParticipantsNumber] = useState("");
     const [participantsNumberError, setParticipantsNumberError] = useState("");
     const [location, setLocation] = useState("");
     const [locationError, setLocationError] = useState("");

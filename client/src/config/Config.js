@@ -1,0 +1,1 @@
+export const blogURL= 'http://localhost:5001/blogs';

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useContext } from "react";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -8,7 +8,12 @@ import TagsInput from "../layout/TagsInput";
 import InputField from "../layout/InputField";
 import CloseIcon from '@mui/icons-material/Close';
 import SelectInput from "../layout/SelectInput";
+import axios from "axios";
+import { blogURL } from "../config/Config";
+import BlogContext from './../context/BlogContext';
+
 const AddBlog = (props) => {
+    const {addBlog} = useContext(BlogContext);
     const {open,handleClose} =props;
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [isNews, setIsNews] = useState(true);
@@ -44,7 +49,7 @@ const AddBlog = (props) => {
     }
     setBlogType(type);
   }
-  const handleCreateBlog = () => {
+  const handleCreateBlog = async () => {
     if(blogTitle.trim() === ''){
       setTitleError("Please enter a title");
       return;
@@ -68,8 +73,33 @@ const AddBlog = (props) => {
       return;
     }
     setBlogContentError("");
-    handleClose();
+    const blog = {
+        userId:"12",
+        title: blogTitle,
+        content: blogContent,
+        tags: tagsList,
+        type: blogType,
+        rating: blogRating,
+    }
+    await axios.post(blogURL, blog).then(res => {
+       // console.log(res.data.blog);
+       addBlog(res.data.blog);
+    }).catch(err => {
+        console.log(err);
+    })
+    
+    closeBlogDialog();
   }
+  const closeBlogDialog = () => {
+    handleClose();
+    //clear all fields
+    setBlogTitle('');
+    setBlogContent('');
+    setTagsList([]);
+    setBlogType('');
+    setBlogRating(0);
+
+    }
     return (
         <>
             <Dialog
@@ -84,7 +114,7 @@ const AddBlog = (props) => {
                     </Grid>
                     <IconButton
                           aria-label="close"
-                          onClick={()=>handleClose()}
+                          onClick={()=>closeBlogDialog()}
                           sx={{
                             position: 'absolute',
                             right: 8,
@@ -160,7 +190,7 @@ const AddBlog = (props) => {
                     
                   </DialogContentText>
                   <DialogActions>
-                    <Button autoFocus onClick={()=>handleClose()}>
+                    <Button autoFocus onClick={()=>closeBlogDialog()}>
                       Cancel
                     </Button>
                     <Button autoFocus onClick={handleCreateBlog}>

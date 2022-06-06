@@ -2,10 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import {BlogContextProvider} from './context/BlogContext';
 
 ReactDOM.render(
   <React.StrictMode>
+  
+  <BlogContextProvider>
     <App />
+   </BlogContextProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
