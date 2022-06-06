@@ -1,10 +1,11 @@
 const router = require('express').Router();
+const Blog = require('../models/Blog');
 
 //create a new blog
 router.post('/', (req, res) => {
    const blog = new Blog(req.body);
     blog.save()
-        .then((b) =>nres.status(201).json({
+        .then((b) =>res.status(201).json({
                                     message: 'Blog created successfully',
                                     blog:b,
                     }))
@@ -36,7 +37,9 @@ router.delete('/:id', (req, res) => {
 
 //get all blogs
 router.get('/', (req, res) => {
-    Blog.find()
+    //get all blogs and sort them by createdAt date in descending order
+   
+    Blog.find().sort({ createdAt: -1 })
         .then(blogs => res.json(blogs))
         .catch(err => res.status(404).json({ notfound: 'No blogs found' }));
 });

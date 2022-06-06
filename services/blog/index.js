@@ -25,7 +25,7 @@ app.use(cors({
 app.use(helmet());
 app.use(morgan('common'));
 app.use(express.json());
-app.use("/blog", blogsRoute);
+app.use("/blogs", blogsRoute);
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
