@@ -5,6 +5,7 @@ import Login from './../components/pages/Login';
 import Signup from './../components/pages/Signup'
 import ErrorPage from './../components/pages/ErrorPage';
 import Channel from './../components/pages/Channel';
+import Create from './../components/pages/Create';
 import Profile from '../components/pages/Profile';
 
 const Router = () => {
@@ -19,6 +20,7 @@ const Router = () => {
             <Route path="/login" element={<Login/>} />
             <Route path="/signup" element={<Signup/>} />
             <Route path="/channel" element={<Channel/>} />
+            <Route path="/create" element={<Create/>} />
             <Route path="*" element={<ErrorPage/>}/>
             </Routes>
         </BrowserRouter>

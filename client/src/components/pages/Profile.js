@@ -51,7 +51,6 @@ const Profile = () => {
 
     const handleSavePost=()=>{
         setEditInfosIsOpen(false);
-
     }
 
     return (

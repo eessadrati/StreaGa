@@ -13,7 +13,7 @@ function UploadedVideos() {
         width: '100%',
     }
   return (
-    <Grid container >
+    <Grid container spacing={1}>
         <Grid item xs={4}>
             <Video video={video} posterStyle={posterStyle} /> 
         </Grid>
