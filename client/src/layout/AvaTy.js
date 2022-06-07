@@ -10,8 +10,7 @@ const AvaTy = (props) => {
                 <AvatarProfile srcImg={srcImg} name={name} />
                 <Grid sx={{paddingLeft:'0.6vw'}}>
                 <Typography variant='body1' fontSize='1.2vw' sx={{cursor:'pointer'}}>{name}</Typography>
-                </Grid>
-                    
+                </Grid>                    
          </Grid>   
         </>
     );

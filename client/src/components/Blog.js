@@ -76,9 +76,8 @@ const Blog = (props) => {
         setEditPostIsOpen(true);
     }
     const handleTagsList =(items) =>{
-        console.log(items)
        setTagsList(items);
-      }
+    }
       const handleblogTitleChange=(e)=>{
                setBlogTitle(e.target.value);
       }
@@ -126,8 +125,6 @@ const Blog = (props) => {
         setIsConfirmDeleteOpen(false)
     }
     
-
-
 
     return (
         <>
@@ -216,12 +213,12 @@ const Blog = (props) => {
             {dialogIsOpen &&(
                 <>
                 <Grid container   sx={{
-            position: "absolute",
-            top: "6vh",
-            left: "45%",
-            width:'auto',
-            }}
-            ref={dialogRef}>
+                position: "absolute",
+                top: "6vh",
+                left: "45%",
+                width:'auto',
+                }}
+                ref={dialogRef}>
         {/** <MoreButtonDialog open={dialogIsOpen} onClose={closeDialog} />*/} 
        <Paper elevation={8} sx={{width:'20vw'}}>
         <Typography variant='body1'
@@ -245,7 +242,7 @@ const Blog = (props) => {
         </Paper>
         </Grid>
         </>
-            )}
+        )}
         </Paper>
         <Dialog
                   fullWidth

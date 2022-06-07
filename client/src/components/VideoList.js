@@ -16,7 +16,7 @@ const VideoList = (props) => {
     const [endVideoList, setEndVideoList]=useState(false);
     const [beginningVideoList, setBeginnigVideoList]=useState(true);
     const videoListRef=useRef(null);
-const handleScrollVideoLis =(e)=>{
+    const handleScrollVideoLis =(e)=>{
     const end = e.target.scrollWidth - e.target.scrollLeft === e.target.clientWidth;
     const beginning=e.target.scrollLeft===0; 
     
