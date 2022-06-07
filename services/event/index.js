@@ -24,7 +24,7 @@ app.use(cors({
 app.use(helmet());
 app.use(morgan('common'));
 app.use(express.json());
-app.use("/event",eventsRoute);
+app.use("/events",eventsRoute);
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);

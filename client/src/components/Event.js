@@ -1,4 +1,4 @@
-import React,{ useState, useRef}from 'react';
+import React,{ useState, useRef, useEffect, useContext}from 'react';
 import { Avatar, Button, Divider, Grid, IconButton, Paper, Rating, styled, Typography,
     Dialog, DialogTitle,DialogContent,DialogActions} from '@mui/material';
 import { deepOrange } from '@mui/material/colors';
@@ -9,28 +9,29 @@ import SendIcon from '@mui/icons-material/Send';
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 import PlaceIcon from '@mui/icons-material/Place';
 import PeopleIcon from '@mui/icons-material/People';
-import AvatarProfile from './../layout/AvatarProfile';
-import Tag from './../layout/Tag';
-import AlertDialog from '../layout/AlertDialog';
-import MoreButtonDialog from './MoreButtonDialog';
 import useOutsideClick from './../utils/useOutsideClick';
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon  from '@mui/icons-material/Close';
-import TagsInput from './../layout/TagsInput';
 import InputField from './../layout/InputField';
 import FlagIcon from '@mui/icons-material/Flag';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
 import DateTimeField from '../layout/DateTimeField';
 import { numberInputStyle } from '../utils/Style';
+import { eventURL } from '../config/Config';
+import axios from 'axios';
+import EventContext from '../context/EventContext';
+import ConfirmDelete from './ConfirmDelete';
+
 const Event = (props) => {
     const {event,deletEvent,sx} = props;
+    const {updateEvent,deleteEvent}=useContext(EventContext);
     //blog={id,userId,game,title,descpription,participantsNumber, location, startDate, endDate,link}
-    const [eventTitle, setEventTitle] = useState("title");
+    const [eventTitle, setEventTitle] = useState("");
     const [titleError, setTitleError] = useState("");
     const [game, setGame] = useState("game");
     const [gameError, setGameError] = useState("");
-    const [participantsNumber, setParticipantsNumber] = useState("100");
+    const [participantsNumber, setParticipantsNumber] = useState("");
     const [participantsNumberError, setParticipantsNumberError] = useState("");
     const [location, setLocation] = useState("casablanca");
     const [locationError, setLocationError] = useState("");
@@ -38,13 +39,29 @@ const Event = (props) => {
     const [linkError, setLinkError] = useState("");
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
-    const [eventDesc, setEventDesc] = useState("descreption");
-    const [descError, setDescError] = useState("");
+    const [eventDesc, setEventDesc] = useState("");
     const [isMe, setIsMe] = useState(true);
-    const [editPostIsOpen, setEditPostIsOpen] = useState(false);
+    const [editEventIsOpen, setEditEventIsOpen] = useState(false);
     const [dialogIsOpen, setDialogIsOpen] = useState(false);
+    const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] =useState(false)
     const moreButtonRef=useRef(null);
     const dialogRef=useRef(null);
+
+   useEffect(()=>{
+     if(event){
+        setEventTitle(event.title);
+        setGame(event.game);
+        setParticipantsNumber(event.participantsNumber);
+        setLocation(event.location);
+        setLink(event.link);
+        setLocation(event.location);
+        setStartDate(event.startDate);
+        setEndDate(event.endDate);
+        setEventDesc(event.description);
+        setIsMe(event.userId!=="19923456789"); 
+     }
+   },[event])
+   
     const goToProfile=()=>{
       console.log("profile")
     }
@@ -60,21 +77,79 @@ const Event = (props) => {
 
     useOutsideClick(dialogRef,moreButtonRef,() => setDialogIsOpen(false));
     const editePost=()=>{
-        setEditPostIsOpen(true);
+      setEditEventIsOpen(true);
     }
-      const handleblogTitleChange=(e)=>{
-               setEventTitle(e.target.value);
+    const handleSaveEvent= async ()=>{
+      if(eventTitle.trim() === ''){
+        setTitleError("Please enter a title");
+        return;
       }
-      const handleEventDescChange =(e)=>{
-        setEventDesc(e.target.value);
+      setTitleError("");
+      if(game.trim() === ''){
+          setGameError("Please enter a game");
+          return;
       }
-      const handleSavePost=()=>{
-        setEditPostIsOpen(false);
+      setGameError("");
+  
+      if(location.trim() === ''){
+          setLocationError("Please enter a location");
+          return;
+      }
+      setLocationError("");
+  
+      if(!participantsNumber){
+          setParticipantsNumberError("Please enter a number");
+          return;
+      }
+      setParticipantsNumberError("");
+      
+      if(link.trim() === ''){
+          setLinkError("Please enter a link");
+          return;
+      }
+      setLinkError("");
+      const eventUpdated={
+          startDate,
+          endDate,
+          userId:"5e9f8f8f8f8f8f8f8f8f8f8",
+          title:eventTitle,
+          game,
+          location,
+          participantsNumber,
+          description:eventDesc,
+          link
+      }
 
-      }
-        
-    const deletePost=()=>{
+        await axios.put(`${eventURL}/${event._id}`,eventUpdated).then(res=>{
+          //console.log(res)
+          updateEvent(res.data);
+      }).catch(err=>{
+             console.log(err)  
+        })
 
+        setEditEventIsOpen(false);
+
+    }
+    const handleCancelEditeEvent=()=>{
+        setEventTitle(event.title);
+        setGame(event.game);
+        setParticipantsNumber(event.participantsNumber);
+        setLocation(event.location);
+        setLink(event.link);
+        setLocation(event.location);
+        setStartDate(event.startDate);
+        setEndDate(event.endDate);
+        setEventDesc(event.description);
+        setEditEventIsOpen(false);
+    }
+    const handleDeleteEvent= async ()=>{
+      await axios.delete(`${eventURL}/${event._id}`).then(res=>{
+        console.log(res)
+        deleteEvent(event._id)
+    }).catch(err=>{
+        console.log(err)
+    })
+    setIsConfirmDeleteOpen(false)
     }
     //create date for 2022/05/24 14:55 
 
@@ -87,14 +162,18 @@ const Event = (props) => {
                         paddingTop:'0.4vh',
                         alignItems:'center'
                         }}>
-                <Typography variant="subtitle2" component="div" sx={{fontSize:'0.9vw',fontWeight:'bold'}}>
-                <span style={{color:'#B20600'}}>{moment("2022/07/24 14:55 ").format('LLLL')}</span>
-                       {` - `}
-                <span  style={{color:'#B20600'}}>{moment("2022/08/24 14:55 ").format('LLLL')}</span>
-                </Typography>
-                <Typography variant="h5" sx={{fontSize:'1.7vw',fontWeight:'bold'}}>
-                     {"event.title title title title tile"} 
-                </Typography>
+                <Grid item xs={12}>
+                  <Typography variant="subtitle2" component="div" sx={{fontSize:'0.9vw',fontWeight:'bold'}}>
+                  <span style={{color:'#B20600'}}>{moment(event.startDate).format('LLLL')}</span>
+                        {` - `}
+                  <span  style={{color:'#B20600'}}>{moment(event.endDate).format('LLLL')}</span>
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography variant="h5" sx={{fontSize:'1.7vw',fontWeight:'bold'}}>
+                      {event.title}
+                  </Typography>
+                </Grid>
             {/** <AvatarProfile srcImg={""} name={"name"} />
             <Grid sx={{paddingLeft:'0.6vw'}}>
                 <Typography variant='body1' fontSize='1.6vw' sx={{cursor:'pointer'}}>channel name</Typography>
@@ -116,13 +195,13 @@ const Event = (props) => {
                                       alignItems:'center',
                                       flexWrap:'wrap'}}>
                       <SportsEsportsIcon/>
-                      <span>call of duty</span>
+                      <span>{event.game}</span>
                 </Grid>
                 <Grid item xs={6}  sx={{display:'flex',
                                       alignItems:'center',
                                       flexWrap:'wrap'}}>
                         <PlaceIcon/>
-                        <span>casablanca</span>
+                        <span>{event.location}</span>
                 </Grid>
                  <Grid item xs={6} sx={{display:'flex',
                                       alignItems:'center',
@@ -133,8 +212,6 @@ const Event = (props) => {
                         <Grid sx={{color:'#8D8DAA',marginLeft:'0.2vw',"&:hover":{
                                           cursor:'pointer',
                                           textDecoration:'underline',
-                                          
-
                                           }}}
                                onClick={goToProfile} >
                             {" Essadrati Hassan"}
@@ -147,11 +224,11 @@ const Event = (props) => {
                                       marginTop:'1vh',
                                       fontSize:'1.2vw'}}>
                         <PeopleIcon/>
-                        <span>100 participants</span>
+                        <span>{event.participantsNumber} participants</span>
                 </Grid>
                 <Typography variant='subtitle1' component='div' sx={{marginTop:'1.4vh',}} >
-                       bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla 
-                </Typography>
+                {event.description}
+                 </Typography>
                 <Grid item container xs={12} justifyContent="right" sx={{margin:'1.2vh 0.4vw'}}>
                   <Button variant="contained" sx={{bgcolor:'#8D8DAA',
                                                     textTransform: 'none',
@@ -162,10 +239,11 @@ const Event = (props) => {
                                                     }
                                                     }}  
                                               target="_blank"
-                                              href='http://www.google.com/'
+                                              href={event.link}
                                               startIcon={<AddIcon />}>
                       Register Now
                   </Button>
+                 
                 </Grid>
             </Grid> 
             {dialogIsOpen &&(
@@ -193,7 +271,7 @@ const Event = (props) => {
                     backgroundColor:'#f5f5f5',
                     cursor:'pointer'
                     }}}
-                    onClick={()=>deletEvent("123")}>
+                    onClick={()=>{setIsConfirmDeleteOpen(true)}}>
             Delete event
         </Typography>
         </Paper>
@@ -203,7 +281,7 @@ const Event = (props) => {
         </Paper>
         <Dialog
                   fullWidth
-                  open={editPostIsOpen}
+                  open={editEventIsOpen}
                   >
                   <DialogTitle sx={{m:'0',p:'1.5vh 0.4vw' }}>
                     <Grid container alignContent='center' justifyContent='center'>
@@ -211,7 +289,7 @@ const Event = (props) => {
                     </Grid>
                     <IconButton
                           aria-label="close"
-                          onClick={()=>setEditPostIsOpen(false)}
+                          onClick={handleCancelEditeEvent}
                           sx={{
                             position: 'absolute',
                             right: 8,
@@ -302,20 +380,25 @@ const Event = (props) => {
                               label='Link'
                               name="link"
                               value={link}
+                              errorMessage={linkError}
                               sx={{marginBottom:'2vh',marginTop:'2vh'}}
                               onChange={(e)=>setLink(e.target.value)}
                               placeholder='Link to register in the event' 
                               />
                   </DialogContent>
                   <DialogActions>
-                    <Button autoFocus onClick={()=>setEditPostIsOpen(false)}>
+                    <Button autoFocus onClick={handleCancelEditeEvent}>
                       Cancel
                     </Button>
-                    <Button autoFocus onClick={handleSavePost}>
+                    <Button autoFocus onClick={handleSaveEvent}>
                       Save
                     </Button>
                   </DialogActions>
               </Dialog>
+              <ConfirmDelete    open={isConfirmDeleteOpen} 
+                                onClose={()=>{setIsConfirmDeleteOpen(false)}}
+                                onConfirm={()=>{handleDeleteEvent()}}
+                                />
         </>
     );
 };

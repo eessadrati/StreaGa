@@ -3,12 +3,15 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {BlogContextProvider} from './context/BlogContext';
+import { EventContextProvider } from './context/EventContext';
 
 ReactDOM.render(
   <React.StrictMode>
   
   <BlogContextProvider>
+  <EventContextProvider>
     <App />
+   </EventContextProvider>
    </BlogContextProvider>
   </React.StrictMode>,
   document.getElementById('root')

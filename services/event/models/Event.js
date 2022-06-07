@@ -23,6 +23,10 @@ const eventSchema = new mongoose.Schema({
         required: true
 
     },
+    link: {
+        type: String,
+        required: true
+    },
     userId: {
         type: String,
         required: true

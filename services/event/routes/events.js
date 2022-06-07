@@ -3,7 +3,7 @@ const Event = require('../models/Event');
 
 
 router.get('/', (req, res) => {
-    Event.find()
+    Event.find().sort({ createdAt: -1 })
         .then(events => res.json(events))
         .catch(err => res.status(404).json({ notfound: 'No events found' }));
 }
@@ -11,7 +11,7 @@ router.get('/', (req, res) => {
 
 //create new event
 router.post('/', (req, res) => {
-    const { startDate, endDate, title, game, location, userId, participantsNumber, description } = req.body;
+    const { startDate, endDate, title, game,link, location, userId, participantsNumber, description } = req.body;
     if (!startDate || !endDate || !title || !game || !location || !userId || !participantsNumber || !description) {
         return res.json({ error: 'Please provide all fields' });
     }
@@ -21,6 +21,7 @@ router.post('/', (req, res) => {
         title: title,
         game: game,
         location: location,
+        link: link,
         userId: userId,
         participantsNumber: participantsNumber,
         description: description

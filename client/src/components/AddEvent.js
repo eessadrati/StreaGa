@@ -1,18 +1,17 @@
-import React, { useState } from "react";
-import Box from "@mui/material/Box";
-import Avatar from "@mui/material/Avatar";
+import React, { useState,useContext } from "react";
 import Button from "@mui/material/Button";
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, IconButton,
-          List, ListItem, ListItemText, Rating, Typography } from "@mui/material";
-import TagsInput from "../layout/TagsInput";
+import { Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton } from "@mui/material";
 import InputField from "../layout/InputField";
 import CloseIcon from '@mui/icons-material/Close';
-import SelectInput from "../layout/SelectInput";
-import Event from './Event';
 import DateTimeField from "../layout/DateTimeField";
 import { numberInputStyle } from "../utils/Style";
+import axios from "axios";
+import { eventURL } from "../config/Config";
+import EventContext from './../context/EventContext';
+
 const AddEvent = (props) => {
     const {open,handleClose} =props;
+    const {addEvent} = useContext(EventContext);
     const [eventTitle, setEventTitle] = useState("");
     const [titleError, setTitleError] = useState("");
     const [game, setGame] = useState("");
@@ -24,7 +23,7 @@ const AddEvent = (props) => {
     const [link , setLink] = useState("");
     const [linkError, setLinkError] = useState("");
     const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState();
+    const [endDate, setEndDate] = useState(new Date());
     const [eventDesc, setEventDesc] = useState("");
 console.log(startDate);
   const onStartDateChange=(newValue)=>{
@@ -34,7 +33,7 @@ const onEndDateChange=(newValue)=>{
   setEndDate(newValue);
 }
   
-  const handleAddEvent= () => {
+  const handleAddEvent= async() => {
     if(eventTitle.trim() === ''){
       setTitleError("Please enter a title");
       return;
@@ -63,9 +62,37 @@ const onEndDateChange=(newValue)=>{
         return;
     }
     setLinkError("");
-
-    handleClose();
+    const event={
+        startDate,
+        endDate,
+        userId:"5e9f8f8f8f8f8f8f8f8f8f8",
+        title:eventTitle,
+        game,
+        location,
+        participantsNumber,
+        description:eventDesc,
+        link
+    }
+    await axios.post(eventURL, event).then(res => {
+        console.log(res.data);
+        addEvent(res.data);
+     }).catch(err => {
+         console.log(err);
+     })
+     closeEventDialog();
   }
+  const closeEventDialog = () => {
+    handleClose();
+    //clear all fields;
+    setEventTitle("");
+    setGame("");
+    setParticipantsNumber("");
+    setLocation("");
+    setLink("");
+    setEventDesc("");
+    setStartDate(new Date());
+    setEndDate(new Date());
+    }
     return (
         <>
             <Dialog
@@ -79,7 +106,7 @@ const onEndDateChange=(newValue)=>{
                     </Grid>
                     <IconButton
                           aria-label="close"
-                          onClick={()=>handleClose()}
+                          onClick={()=>closeEventDialog()}
                           sx={{
                             position: 'absolute',
                             right: 8,
@@ -241,7 +268,7 @@ const onEndDateChange=(newValue)=>{
                     
                   </DialogContentText>*/}
                   <DialogActions>
-                    <Button autoFocus onClick={()=>handleClose()}>
+                    <Button autoFocus onClick={()=>closeEventDialog()}>
                       Cancel
                     </Button>
                     <Button autoFocus onClick={handleAddEvent}>
