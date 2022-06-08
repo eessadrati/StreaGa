@@ -54,7 +54,7 @@ const Profile = () => {
     }
 
     return (
-        <Grid container direction="row" sx={{height:height ,overflow:'auto'}} >
+        <Grid container direction="row" sx={{height:height ,overflow:'auto', marginTop:'20px'}} >
             <CssBaseline />
             <Grid item xs={3} sx={styles.firstcol} >
                 <img src='/profile.jpg' alt='' style={styles.profilePic} />

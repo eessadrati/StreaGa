@@ -58,8 +58,16 @@ function Create() {
         }
 
         const client = new IvsClient(config);
-        const command = new GetStreamCommand(getStreamInput);
-        const response = await client.send(command);
+        //const command = new GetStreamCommand(getStreamInput);
+        //const response = await client.send(command);
+        const channelCommand = new CreateChannelCommand(newChannel);
+        const bucketCommand = new CreateRecordingConfigurationCommand(newBucket);
+        const channelRes = await client.send(channelCommand);
+        const bucketRes = await client.send(bucketCommand);
+        
+        setStreamServer(channelRes.channel.ingestEndpoint);
+        setStreamKey(channelRes.streamKey.value);
+        setPlaybackUrl(channelRes.channel.playbackUrl);
         setIsLive(true);
 
         } catch (err) {
@@ -200,7 +208,7 @@ function Create() {
                 tags={tagsList}
                 placeholder="add tag"
                 id="outlined-basic" label="Tags" variant="outlined"
-                value={tags} onChange={e => setTags(e.target.value)}
+                value={tags} onChange={e => setTags(tags.push(e.target.value))}
                 />
             </Grid>
         </Grid>

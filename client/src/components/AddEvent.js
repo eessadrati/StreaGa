@@ -25,9 +25,9 @@ const AddEvent = (props) => {
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
     const [eventDesc, setEventDesc] = useState("");
-console.log(startDate);
-  const onStartDateChange=(newValue)=>{
-    setStartDate(newValue);
+
+    const onStartDateChange=(newValue)=>{
+      setStartDate(newValue);
 }
 const onEndDateChange=(newValue)=>{
   setEndDate(newValue);
