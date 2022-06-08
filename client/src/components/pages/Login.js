@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Container,
   CssBaseline,
@@ -13,8 +13,11 @@ import {
 import { VisibilityOff, Visibility } from "@mui/icons-material";
 import IconButton from "@mui/material/IconButton";
 import Copyright from "./../../utils/Copyright";
-import { Link as LinkTo } from "react-router-dom";
+import { Link as LinkTo, useNavigate } from "react-router-dom";
 import InputField from "./../../layout/InputField";
+import axios from "axios";
+import { userURL } from './../../config/Config';
+import AuthContext from './../../context/AuthContext';
 
 const Login = () => {
     const [email, setEmail] = useState("");
@@ -22,7 +25,8 @@ const Login = () => {
     const [errorMessage, setErrorMessage]=useState("");
     const [showPassword, setShowPassword] = useState(false);
     //const history = useHistory();
-    //const { getLoggedIn } = useContext(AuthContext);
+    const { getCurrentUser,setLoggedIn } = useContext(AuthContext);
+    const navigate=useNavigate()
     const handleClick = async (e) => {
       e.preventDefault();
        if(!email.trim() || !password){
@@ -34,11 +38,17 @@ const Login = () => {
           password: password,
         };
         try {
-          /* await axios.post("/auth/register", user);
-              await getLoggedIn();
-              history.push("/");*/
+          await axios.post(`${userURL}/signin`, user).then((res) => {
+            console.log(res);
+            localStorage.setItem('userId', res.data.dummy._id);
+            localStorage.setItem('user', JSON.stringify(res.data.dummy));
+            console.log(JSON.stringify(res.data.dummy))
+          });
+          setLoggedIn(true)
+          getCurrentUser();
+           navigate("/")
           console.log("Successfully logged in!");
-          console.log(user);
+          
         } catch (err) {
           console.log(err);
         }
@@ -65,9 +75,9 @@ const Login = () => {
   
     return (
       <>
-        <Container component="main" maxWidth="sm">
+        <Container component="main" maxWidth="sm" >
           <CssBaseline />
-          <Paper elevation={3} sx={{padding:'1.5vh 1.5vw', margin:'1.4vh 0'}}>
+          <Paper elevation={3} sx={{padding:'1.5vh 1.5vw', margin:'6.4vh 0'}}>
           <Grid
             container
             direction="column"

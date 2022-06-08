@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React,{useContext, useState} from "react";
 import Video from "./Video";
 import {Tabs,Tab,Box, IconButton, Grid, CssBaseline, Typography, Divider, Paper} from '@mui/material';
 import FeedIcon from '@mui/icons-material/Feed';
@@ -13,16 +13,23 @@ import Title from './../../layout/Title';
 import { hideScrollBar } from "../../utils/Style";
 import AvaTy from './../../layout/AvaTy';
 import Events from './../Events';
+import AuthContext from './../../context/AuthContext';
 
 
 const Home = () => {
   const [value, setValue] = useState('home');
+  const {user, userId,loggedIn}=useContext(AuthContext);
+  console.log(user);
+  console.log(userId);
+  console.log(loggedIn);
+  console.log("yesss")
   const {height}=useWindowDimensions();
   const followedChannels = [{srcImg:'/eye.webp',name:"channel1",id:"1"},{srcImg:'',name:"channel2",id:"2"},{srcImg:'/eye.webp',name:"channel3",id:"3"}];
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+  //console.log(user);
   return (
     <>
     <CssBaseline/>
@@ -31,12 +38,18 @@ const Home = () => {
         <Paper variant="outlined"  sx={{bgcolor:'background.secondary',padding:'1vh 0.4vw'}}>
         <Title title="Followed channels" />
         <Divider/>
-        {followedChannels.map((channel,index)=>(
+        {user &&  user.followedChannels>0 ? (
+          <>
+          {user.followedChannels.map((channel,index)=>(
           <AvaTy srcImg={channel.srcImg} name={channel.name} key={index} sx={{'&:hover':{
                                                   cursor:'pointer',
                                                   backgroundColor:'#f5f5f5'
                                                 }}}/>
         ))}
+        </>
+        ):(
+          <div>no channels</div>
+        )}
         </Paper>
       </Grid>
       <Grid item xs={10} >

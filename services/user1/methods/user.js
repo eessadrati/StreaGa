@@ -1,10 +1,10 @@
-const User = require('../models/user');
+const User = require('../model/user');
 const bcrypt = require('bcryptjs');
 
 
 //create a new user
 const createUser = async (req, res) => {
-    const {username,email,password,phoneNumber,firstName, lastName} = req.body;
+    const {username, email, password,phoneNumber,firstName, lastName} = req.body;
     const user =  new User({
         username,
         email,
@@ -26,21 +26,6 @@ const createUser = async (req, res) => {
 const getUser =(req, res) => {
     
     User.findById(req.params.id, function (err, users) {
-        if (err){
-            console.log(err);
-        }
-        else{
-            const test = users;
-            test.salt = undefined;
-            test.hashed_password = undefined;
-            res.json(test);
-        }
-    });
-};
-
-const getUserByUsername =(req, res) => {
-    
-    User.findById(req.params.username, function (err, users) {
         if (err){
             console.log(err);
         }
@@ -185,7 +170,6 @@ module.exports = {
     createUser,
     deleteUser,
     getUser,
-    getUserByUsername,
     getAllUsers,
     updateUser,
     follow, 

@@ -5,18 +5,23 @@ import TagsInput from './../layout/TagsInput'
 
 function CreateChannel() {
   const [tagsList,setTagsList]=useState([]);
-
+  const [name, setName]=useState('');
+  const [nameError, setNameError]=useState('');
   const handleTagsList =(items) =>{
-    console.log(items)
     setTagsList(items);
   }
 
   return (
-    <Grid container direction="row" spacing={1} sx={styles.container}>
-        <Grid item xs={12}>          
-            <InputField  id="outlined-basic" label="Channel name" variant="outlined" sx={{width:'400px'}}/>
+    <Grid container  sx={{padding:'2px'}} >
+        <Grid item xs={10}>          
+            <InputField  value={name}
+                         label="Channel name"
+                          placeholder="Enter channel name"
+                          errorMessage={nameError}
+                          onChange={(e)=>setName(e.target.value)}
+                         sx={{width:'400px'}}/>
         </Grid>
-        <Grid item sx={{marginTop:'2vh'}}>
+        <Grid item xs={10} sx={{marginTop:'2vh'}}>
             <TagsInput 
             sx={{width:'400px'}}
             selectedTags={handleTagsList}
@@ -25,20 +30,13 @@ function CreateChannel() {
             name="tags"
             tags={tagsList}
             placeholder="add tag"
-            id="outlined-basic" label="Tags" variant="outlined" 
+             label="Tags"  
             />
         </Grid>
     </Grid>
   )
 }
 
-const styles = {
-    container: {
-        marginLeft: '10px',
-    },
-    button: {
-        alignItems:'right' //??
-    }
-}
+
 
 export default CreateChannel

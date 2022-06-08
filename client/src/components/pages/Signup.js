@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Container,
   CssBaseline,
@@ -18,11 +18,16 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import EmailIcon from "@mui/icons-material/Email";
 import IconButton from "@mui/material/IconButton";
 import Copyright from "./../../utils/Copyright";
-import { Link as LinkTo } from "react-router-dom";
+import { Link as LinkTo, useNavigate } from "react-router-dom";
 import InputField from "./../../layout/InputField";
 import { numberInputStyle } from "../../utils/Style";
+import axios from "axios";
+import { userURL } from './../../config/Config';
+import AuthContext from './../../context/AuthContext';
+
 
 const Signup = () => {
+  const {setLoggedIn,getCurrentUser,getLoggedIn} = useContext(AuthContext);
   const [firstName, setFirstName] = useState("");
   const [firstNameErr, setFirstNameErr] = useState("");
   const [lastName, setLastName] = useState("");
@@ -38,6 +43,7 @@ const Signup = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [confirmPasswordErr, setConfirmPasswordErr] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
   //const history = useHistory();
   //const { getLoggedIn } = useContext(AuthContext);
   /*const handleSubmit =  (e) => {
@@ -144,16 +150,20 @@ const Signup = () => {
         firstName,
         lastName,
         username,
-        phone,
+        phoneNumber: phone,
         email,
         password,
     };
     try {
-      /* await axios.post("/auth/register", user);
-            await getLoggedIn();
-            history.push("/");*/
-      console.log("Successfully registered!");
-      console.log(user);
+      await axios.post(`${userURL}/create`, user).then((res) => {
+        console.log(res);
+        localStorage.setItem('userId', res.data._id);
+      });
+      setLoggedIn(true)
+      getCurrentUser();
+       navigate("/")
+         
+      
     } catch (err) {
       console.log(err);
     }

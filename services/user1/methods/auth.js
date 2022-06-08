@@ -1,4 +1,4 @@
-const User = require('../models/user');
+const User = require('../model/user');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const {expressjwt} = require('express-jwt');
@@ -52,7 +52,14 @@ const logOut = (req, res) => {
      algorithms: ['HS256']
  })
 
+ const currentUser = (req, res) => {
+    User.findById(req.user)
+    .select('-password')
+    .then(user => res.json(user));
+}
+
  module.exports = {
+    currentUser,
     signIn,
     logOut,
     requireSignIng

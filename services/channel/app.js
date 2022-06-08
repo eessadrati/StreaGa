@@ -46,8 +46,8 @@ app.use((error, req, res, next) => {
   });
 });
 
-app.listen(process.env.PORT || 5000, () => {
-  console.log("Server is up on port 3000");
+app.listen(5000, () => {
+  console.log("Server is up on port 5000");
 });
 
 module.exports = app;

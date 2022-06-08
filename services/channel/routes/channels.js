@@ -25,14 +25,14 @@ router.post("/", (req, res, next) => {
     _id: mongoose.Types.ObjectId(),
     name: req.body.name,
     userId: req.body.userId,
+    tags: req.body.tags,
+    description: req.body.description,
   });
-  chanel
-    .save()
+  channel.save()
     .then((result) => {
-      console.log(result);
       res.status(200).json({
         message: "Channel created",
-        createChannel: result,
+        channel: result,
       });
     })
     .catch((err) => {
