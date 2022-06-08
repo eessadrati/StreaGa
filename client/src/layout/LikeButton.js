@@ -10,8 +10,8 @@ const LikeButton = (props) => {
     return (
         <>
                 
-                 { isLiked ? <FavoriteIcon onClick={onClick} sx={{ fontSize: '2.5vw',cursor:'pointer'}}/> 
-                           : <FavoriteBorderIcon onClick={onClick} sx={{ fontSize: '2.5vw',cursor:'pointer' }}/>}
+                 { isLiked ? <FavoriteIcon onClick={onClick} sx={{ fontSize: '1.5vw',cursor:'pointer'}}/> 
+                           : <FavoriteBorderIcon onClick={onClick} sx={{ fontSize: '1.5vw',cursor:'pointer' }}/>}
             
               </>
     );
