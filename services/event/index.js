@@ -4,11 +4,12 @@ const dotenv = require('dotenv');
 const morgan = require('morgan');
 const cors = require('cors');
 const helmet = require('helmet');
+
 const eventsRoute= require('./routes/events');
 
 dotenv.config();
 const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 6000;
 
 mongoose.connect(process.env.MONGO_URI).then(() => {
     console.log('Connected to MongoDB');
