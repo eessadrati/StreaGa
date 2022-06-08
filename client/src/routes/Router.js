@@ -7,6 +7,7 @@ import ErrorPage from './../components/pages/ErrorPage';
 import Channel from './../components/pages/Channel';
 import Create from './../components/pages/Create';
 import Profile from '../components/pages/Profile';
+import Video from '../components/pages/Video';
 
 const Router = () => {
     //const {user} = useContext(AuthContext);
@@ -21,6 +22,7 @@ const Router = () => {
             <Route path="/signup" element={<Signup/>} />
             <Route path="/channel" element={<Channel/>} />
             <Route path="/create" element={<Create/>} />
+            <Route path="/video" element={<Video/>} />
             <Route path="*" element={<ErrorPage/>}/>
             </Routes>
         </BrowserRouter>

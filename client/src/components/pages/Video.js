@@ -31,6 +31,9 @@ import { hideScrollBar } from '../../utils/Style';
 import LikeButton from '../../layout/LikeButton';
 import InputMessage from './../../layout/InputMessage';
 import Title from '../../layout/Title';
+import {Helmet} from "react-helmet";
+const { IvsClient, CreateChannelCommand, CreateRecordingConfigurationCommand, GetStreamCommand,  } = require("@aws-sdk/client-ivs");
+
 
 const Video = () => {
   const { height, width } = useWindowDimensions();
@@ -58,6 +61,8 @@ const Video = () => {
   const [titleError, setTitleError] = useState(null);
   const [videoDescription,setVideoDescription] =useState("bla bla bla bla");
   const [emojiPickerOpen, setEmojiPickerOpen] = useState(false);
+  const [isStreaming, setIsStreaming] = useState(false);
+
   console.log("height:"+height+", wdth:"+width)
   useOutsideClick(emojiPickerRef,btnEmojiPickerRef,()=>{setEmojiPickerOpen(false)});
   const [chat, setChat]=useState([{id:'1', name:"hassan", message:"salam",color:getRandomColor()},{id:'2', name:"mohamed", message:"salam2",color:getRandomColor()},{id:'3', name:"ahmed", message:"salam3",color:getRandomColor()},{id:'4', name:"hassan3", message:"salam4",color:getRandomColor()},{id:'5', name:"hassan4", message:"salam5",color:getRandomColor()},{id:'6', name:"hassan5", message:"salam6",color:getRandomColor()},{id:'7', name:"hassan6", message:"salam7",color:getRandomColor()},{id:'8', name:"hassan7", message:"salam8",color:getRandomColor()},{id:'9', name:"hassan8", message:"salam9",color:getRandomColor()},{id:'10', name:"hassan9", message:"salam10",color:getRandomColor()},{id:'11', name:"hassan10", message:"salam11",color:getRandomColor()},{id:'12', name:"hassan11", message:"salam12",color:getRandomColor()},{id:'13', name:"hassan12", message:"salam13",color:getRandomColor()},{id:'14', name:"hassan13", message:"salam14",color:getRandomColor()},{id:'15', name:"hassan14", message:"salam15",color:getRandomColor()},{id:'16', name:"hassan15", message:"salam16",color:getRandomColor()},{id:'17', name:"hassan16", message:"salam17",color:getRandomColor()},{id:'18', name:"hassan17", message:"salam18",color:getRandomColor()},{id:'19', name:"hassan18", message:"salam19",color:getRandomColor()},{id:'20', name:"hassan19", message:"salam20",color:getRandomColor()},{id:'21', name:"hassan20", message:"salam21",color:getRandomColor()},{id:'22', name:"hassan21", message:"salam22",color:getRandomColor()},{id:'23', name:"hassan22", message:"salam23",color:getRandomColor()},{id:'24', name:"hassan23", message:"salam24",color:getRandomColor()},{id:'25', name:"hassan24", message:"salam25",color:getRandomColor()},{id:'26', name:"hassan25", message:"salam26",color:getRandomColor()},{id:'27', name:"hassan26", message:"salam27",color:getRandomColor()},{id:'28', name:"hassan27", message:"salam28",color:getRandomColor()},{id:'29', name:"hassan28", message:"salam29",color:getRandomColor()},{id:'30', name:"hassan29", message:"salam30",color:getRandomColor()},{id:'31', name:"hassan30", message:"salam31",color:getRandomColor()},{id:'32', name:"hassan31", message:"salam32",color:getRandomColor()},{id:'33', name:"hassan32", message:"salam33",color:getRandomColor()},{id:'34', name:"hassan33", message:"salam34",color:getRandomColor()},{id:'35', name:"hassan34", message:"salam35",color:getRandomColor()},{id:'36', name:"hassan35", message:"salam36",color:getRandomColor()},{id:'37', name:"hassan36", message:"salam37",color:getRandomColor()},{id:'38', name:"hassan37", message:"salam38",color:getRandomColor()},{id:'39', name:"hassan38", message:"salam39",color:getRandomColor()},{id:'40', name:"hassan39", message:"salam40",color:getRandomColor()},{id:'41', name:"hassan40", message:"salam41",color:getRandomColor()},{id:'42', name:"hassan41", message:"salam42",color:getRandomColor()},{id:'43', name:"hassan42", message:"salam43",color:getRandomColor()},{id:'44', name:"hassan43", message:"salam44",color:getRandomColor()},{id:'45', name:"hassan44", message:"salam45",color:getRandomColor()},{id:'46', name:"hassan45", message:"salam46",color:getRandomColor()},{id:'47', name:"hassan46", message:"salam47",color:getRandomColor()},{id:'48', name:"hassan47", message:"salam48",color:getRandomColor()},{id:'49', name:"hassan48", message:"salam49",color:getRandomColor()},{id:'50', name:"hassan49", message:"salam50",color:getRandomColor()},{id:'51', name:"hassan50", message:"salam51",color:getRandomColor()},{id:'52', name:"hassan51", message:"salam52",color:getRandomColor()},{id:'53', name:"hassan52", message:"salam53",color:getRandomColor()},{id:'54', name:"hassan53", message:"salam54",color:getRandomColor()},{id:'55', name:"hassan54", message:"salam55",color:getRandomColor()},{id:'56', name:"hassan55", message:"salam56",color:getRandomColor()},{id:'57', name:"hassan56", message:"salam57",color:getRandomColor()},{id:'58', name:"hassan57", message:"salam58",color:getRandomColor()},{id:'59', name:"hassan58", message:"salam59",color:getRandomColor()},{id:'60', name:"hassan59", message:"salam60",color:getRandomColor()},{id:'61', name:"hassan60", message:"salam61",color:getRandomColor()},{id:'62', name:"hassan61", message:"salam62",color:getRandomColor()},{id:'63', name:"hassan62", message:"salam63",color:getRandomColor()},{id:'64', name:"hassan63", message:"salam64",color:getRandomColor()}])
@@ -75,6 +80,46 @@ const Video = () => {
         return { id:member.id, name:member.name}
       }))
     },[chat])
+
+    // verify if the channel is streaming on render or onChange of isStreaming state
+    useEffect( async () => {
+      try {
+        const accessKeyId= "AKIAX3ZF5PP272EJEPW6";
+        const secretAccessKey = "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";
+        var config = {
+            "region": "eu-west-1",
+            "credentials": {
+                "accessKeyId": accessKeyId,
+                "secretAccessKey": secretAccessKey
+            }
+        }
+        var getStreamInput = {
+          'channelArn': 'arn:aws:ivs:eu-west-1:540708535285:channel/iqXDLZnkA9cQ',
+        }
+        const client = new IvsClient(config);
+        const command = new GetStreamCommand(getStreamInput);
+        const response = await client.send(command);
+        setIsStreaming(true);
+
+      } catch (err) {
+          if (err.Code === 'ChannelNotBroadcasting') {
+              setIsStreaming(false);
+          }
+      }
+    }, [isStreaming]); 
+
+
+    useEffect(() => {
+      let PLAYBACK_URL = "https://bb22679c1b21.eu-west-1.playback.live-video.net/api/video/v1/eu-west-1.540708535285.channel.Y6EGaxOtXuHQ.m3u8";
+      if (IVSPlayer.isPlayerSupported) {
+      const player = IVSPlayer.create();
+      player.attachHTMLVideoElement(document.getElementById('video-player'));
+      player.load(PLAYBACK_URL);
+      player.play();
+      }
+    }, []);
+
+
     const handleChatMemberClick = (member)=>{
       console.log(member)
     }
@@ -108,7 +153,6 @@ const Video = () => {
     const handleVideoDescriptionChange = (e)=>{
       setVideoDescription(e.target.value)
     }
-   
     const handleTagsList =(items) =>{
       console.log(items)
      setTagsList(items);
@@ -116,24 +160,20 @@ const Video = () => {
     const handleTagClick = (item)=>{
       console.log(item+" clicked")
     }
-   
-
-
-    
- 
-    
-const handleChannelNameClick = (channel)=>{
-  console.log(channel)
-}
-const handleMessage=(message)=>{
-  console.log("hh"+message)
-  setChat(c=>[...c,{id:chat.length+1,
-    name:"test",
-    message:message,
-    color:getRandomColor()}])
-}
+    const handleChannelNameClick = (channel)=>{
+      console.log(channel)
+    }
+    const handleMessage=(message)=>{
+      console.log("hh"+message)
+      setChat(c=>[...c,{id:chat.length+1,
+        name:"test",
+        message:message,
+        color:getRandomColor()}])
+    }
     const srcQuality = [ { label: "240p", src: "link" }, { label: "360p", src: "lik" },
     { label: "480p", src: "480p" },{ label: "720p", src: "720p" },{ label: "1080p", src: "1080p" },];
+
+
     return (
         <>
         <CssBaseline/> 
@@ -165,15 +205,21 @@ const handleMessage=(message)=>{
             </Grid>
             <Grid item xs={7} sx={{ maxHeight:'100%',padding:'0.2vw', overflow:'auto',...hideScrollBar}} >
             <Grid >
-              {isLive ? (
+              {isStreaming ?
+              (isLive ? (
                 <>
-                  <LivePlayer src={"/video2.mp4"} srcQualities={srcQuality}/>
+                  <Helmet>
+                      <script src="https://player.live-video.net/1.10.0/amazon-ivs-player.min.js"></script>
+                  </Helmet>
+                  <LivePlayer id="video-player" srcQualities={srcQuality}/>                    
                 </>
                 ) : (
                 <>
                   <VideoPlayer src={"/video2.mp4"} srcQualities={srcQuality}/>
                 </>
-                )}
+                ))
+              :(<Typography>No stream is currently available</Typography>)
+              }
             </Grid>
             <Grid container marginBottom='1.6vh'>
               <Grid item xs={10} >
@@ -327,9 +373,6 @@ const handleMessage=(message)=>{
             </Grid>
             
               <Grid item  xs={3} sx={{height:height,overflow:'hidden'}} >        
-                
-                  
-                    
                     <Grid container>
                   
                     <Grid container item xs={11} alignItems="center" direction="row" justifyContent="center"
