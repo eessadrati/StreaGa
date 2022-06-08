@@ -54,9 +54,10 @@ const Profile = () => {
     }
 
     return (
-        <Grid container direction="row" >
+        <Grid container direction="row" sx={{height:height ,overflow:'auto'}} >
+            <CssBaseline />
             <Grid item xs={3} sx={styles.firstcol} >
-                <img src='/profile.jpg' style={styles.profilePic} />
+                <img src='/profile.jpg' alt='' style={styles.profilePic} />
                 <Grid container direction="row" alignItems="center" >
                     <Grid item xs={3}>
                         <Typography variant="subtitle1" component="div" gutterBottom fontWeight="bold">
@@ -106,6 +107,7 @@ const Profile = () => {
                     </Typography>
                     <EditIcon 
                         onClick={editPost}
+                        sx={{cursor:'pointer'}}
                     />
                 </Grid>
                 <Divider sx={{marginRight:'160px', marginBottom:'30px'}} />

@@ -1,31 +1,36 @@
-import React,{ useState, useRef}from 'react';
+import React,{ useState,useEffect, useRef, useContext}from 'react';
 import { Avatar, Button, Divider, Grid, IconButton, Paper, Rating, styled, Typography,
     Dialog, DialogTitle,DialogContent,DialogActions} from '@mui/material';
 import { deepOrange } from '@mui/material/colors';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import LikeButton from '../layout/LikeButton';
-import InputMessage from './../layout/InputMessage';
 import SendIcon from '@mui/icons-material/Send';
 import AvatarProfile from './../layout/AvatarProfile';
 import Tag from './../layout/Tag';
-import AlertDialog from '../layout/AlertDialog';
-import MoreButtonDialog from './MoreButtonDialog';
 import useOutsideClick from './../utils/useOutsideClick';
 import CloseIcon  from '@mui/icons-material/Close';
 import TagsInput from './../layout/TagsInput';
 import InputField from './../layout/InputField';
+import { blogURL } from '../config/Config';
+import axios from 'axios';
+import ConfirmDelete from './ConfirmDelete';
+import BlogContext from './../context/BlogContext';
+import moment from 'moment';
+
 
 const Blog = (props) => {
     const {blog,sx} = props;
+    const {deleteBlog,updateBlog}=useContext(BlogContext)
     //blog={id,userId,title,tags,likes,body,rating}
-    const [tagsList,setTagsList]=useState(["javascript","react","nodejs","mongodb","python"]);
+    const [tagsList,setTagsList]=useState([]);
     //const rating=2;
     const [isNews,setIsNews]=useState(false);
-    const [likes, setLikes] = useState(785);
-    const [isLiked, setIsLiked] = useState(false);
-    const [blogTitle, setBlogTitle] = useState("title");
+    const [isConfirmDeleteOpen,setIsConfirmDeleteOpen]=useState(false);
+   // const [likes, setLikes] = useState(785);
+    //const [isLiked, setIsLiked] = useState(false);
+    const [blogTitle, setBlogTitle] = useState("");
     const [titleError, setTitleError] = useState("");
-    const [blogBody, setBlogBody] = useState("body");
+    const [blogBody, setBlogBody] = useState("");
     const [bodyError, setBodyError] = useState("");
     const [rating, setRating] = useState(2);
     const [isMe, setIsMe] = useState(true);
@@ -34,22 +39,38 @@ const Blog = (props) => {
     const moreButtonRef=useRef(null);
     const dialogRef=useRef(null);
 
+    useEffect(()=>{
+        if(blog){
+         
+        if(blog.type==="News"){
+            setIsNews(true);
+        }else{
+            setIsNews(false);
+        }
+        setBlogTitle(blog.title);
+        setBlogBody(blog.content);
+        setRating(blog.rating);
+        setTagsList(blog.tags);
+        //setLikes(blog.likes);
+           
+    }
+
+    },[blog])
+
     const handleMoreClick = () => {
-        
+    
         setDialogIsOpen(true)
     }
-    const handleLikeClick = () => {
+    /*const handleLikeClick = () => {
         if (isLiked) {
             setLikes(l=>l);
         } else {
             setLikes(l=>l);
         }
         setIsLiked(!isLiked);
-    }
-    const handleMessage=(message)=>{
-        console.log(message);
-    }
-
+    }*/
+    
+  
     useOutsideClick(dialogRef,moreButtonRef,() => setDialogIsOpen(false));
     const editePost=()=>{
         setEditPostIsOpen(true);
@@ -63,14 +84,47 @@ const Blog = (props) => {
       const handleBlogBodyChange =(e)=>{
         setBlogBody(e.target.value);
       }
-      const handleSavePost=()=>{
+      const handleSavePost= async ()=>{
+       if(blogTitle.trim()===""){
+            setTitleError("Title is required");
+            return
+       }
+       setTitleError("");
+       const data={
+                title:blogTitle,
+                content:blogBody,
+                tags:tagsList,
+                rating:rating
+                }
+      await axios.put(`${blogURL}/${blog._id}`,data).then(res=>{
+           //console.log(res)
+           updateBlog(res.data);
+       }).catch(err=>{
+              console.log(err)  
+         })
+
         setEditPostIsOpen(false);
 
       }
-        
-    const deletePost=()=>{
-
+    const handleCancelEditePost=()=>{
+            
+            setBlogTitle(blog.title);
+            setBlogBody(blog.content);
+            setRating(blog.rating);
+            setTagsList(blog.tags);
+            setEditPostIsOpen(false);
     }
+        
+    const handleDeletePost= async()=>{
+        await axios.delete(`${blogURL}/${blog._id}`).then(res=>{
+            console.log(res)
+            deleteBlog(blog._id)
+        }).catch(err=>{
+            console.log(err)
+        })
+        setIsConfirmDeleteOpen(false)
+    }
+    
 
     return (
         <>
@@ -84,7 +138,7 @@ const Blog = (props) => {
             <Grid sx={{paddingLeft:'0.6vw'}}>
                 <Typography variant='body1' fontSize='1.6vw' sx={{cursor:'pointer'}}>channel name</Typography>
             </Grid>
-            <Grid sx={{paddingLeft:'0.6vw', fontSize:'0.8vw'}}>few seconds ago</Grid>
+            <Grid sx={{paddingLeft:'0.6vw', fontSize:'0.8vw'}}>{`${moment(blog.createdAt).fromNow()}`}</Grid>
             </Grid>
             <Grid item container xs={2} sx={{}} alignItems='center' justifyContent='right' paddingRight='0.8vw'>
                {isMe &&(<IconButton ref={moreButtonRef} onClick={handleMoreClick}>
@@ -97,9 +151,12 @@ const Blog = (props) => {
                         padding:"1.4vh 0.4vw",
                         alignItems:'center'
                         }}>
+                <Grid item xs={12} >
                 <Typography variant='h5'  >
-                       title 
+                       {blogTitle} 
                 </Typography>
+                </Grid>
+                <Grid item xs={12} sx={{marginTop:'0.8vh'}} >
                 {!isNews && (
                     <Grid container>
                    
@@ -112,30 +169,34 @@ const Blog = (props) => {
                     />
                     </Grid>
                     )}
+                </Grid>
+                <Grid item xs={12} >
                 <Typography variant='subtitle1' component='div'  >
-                       bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla 
+                   {blogBody}
                 </Typography>
-                <Grid item >
-                {tagsList.map((tag,index)=>(
+                </Grid>
+                <Grid item xs={12} sx={{marginTop:'0.8vh'}} >
+                {tagsList && tagsList.map((tag,index)=>(
                   <Tag key={index} tag={tag}  onClick={()=>console.log(tag)}/>
                   ))}
                  </Grid>
-                
-            
-           
             </Grid> 
          
-            <Divider sx={{marginTop:'2vh'}}/>
-                <Grid container item  sx={{paddingLeft:'0.3vw', paddingBottom:'0.5vh'}} direction="row" alignItems="center" >
-                    <Grid item   >
-                        <LikeButton isLiked={isLiked} onClick={handleLikeClick}/>
-                    </Grid>
-                    <Grid  item >
-                        <Typography variant='body1' fontSize='1.3vw' sx={{marginLeft:'0.1vw'}}>
-                            {isLiked ? `you and ${likes} others`:`${likes} people `}
-                        </Typography>                       
-                    </Grid>
+           {/** <Divider sx={{marginTop:'0.5vh'}}/>
+         <Grid container item  sx={{paddingLeft:'0.3vw', paddingBottom:'0.5vh'}} direction="row" alignItems="center"
+                                             >
+                <Grid item   >
+                <LikeButton isLiked={isLiked} onClick={handleLikeClick}/>
                 </Grid>
+                <Grid  item >
+                    
+                    <Typography variant='body1' fontSize='1.3vw' sx={{marginLeft:'0.1vw'}}>
+                        {isLiked ? `you and ${likes} others`:`${likes} people `}
+                    </Typography>
+                    
+                </Grid>
+                
+              </Grid> */}
            
         {/**<Divider sx={{marginBottom:'2vh'}}/>
          <Grid  sx={{position:'relative'}}>
@@ -159,25 +220,25 @@ const Blog = (props) => {
                 }}
                 ref={dialogRef}>
         {/** <MoreButtonDialog open={dialogIsOpen} onClose={closeDialog} />*/} 
-        <Paper elevation={8} sx={{width:'20vw'}}>
-            <Typography variant='body1'
-                        onClick={editePost}
-                        fontSize='1.3vw' sx={{padding:'2vh 1.5vw','&:hover':{
-                        backgroundColor:'#f5f5f5',
-                        cursor:'pointer'
-            } }}>
-                Edite post
-            </Typography>
-            <Divider/>
-            <Typography variant='body1' 
-                        fontSize='1.3vw'
-                        onClick={deletePost}
-                        sx={{padding:'2vh 1.5vw','&:hover':{
-                        backgroundColor:'#f5f5f5',
-                        cursor:'pointer'
-                        }}}>
-                Delete post
-            </Typography>
+       <Paper elevation={8} sx={{width:'20vw'}}>
+        <Typography variant='body1'
+                    onClick={editePost}
+                     fontSize='1.3vw' sx={{padding:'2vh 1.5vw','&:hover':{
+            backgroundColor:'#f5f5f5',
+            cursor:'pointer'
+        } }}>
+            Edite post
+        </Typography>
+        <Divider/>
+        <Typography variant='body1' 
+                    fontSize='1.3vw'
+                    onClick={()=>setIsConfirmDeleteOpen(true)}
+                    sx={{padding:'2vh 1.5vw','&:hover':{
+                    backgroundColor:'#f5f5f5',
+                    cursor:'pointer'
+                    }}}>
+            Delete post
+        </Typography>
         </Paper>
         </Grid>
         </>
@@ -191,7 +252,7 @@ const Blog = (props) => {
                     Edit information
                     <IconButton
                           aria-label="close"
-                          onClick={()=>setEditPostIsOpen(false)}
+                          onClick={handleCancelEditePost}
                           sx={{
                             position: 'absolute',
                             right: 8,
@@ -255,7 +316,7 @@ const Blog = (props) => {
                     
                   </DialogContent>
                   <DialogActions>
-                    <Button autoFocus onClick={()=>setEditPostIsOpen(false)}>
+                    <Button autoFocus onClick={handleCancelEditePost}>
                       Cancel
                     </Button>
                     <Button autoFocus onClick={handleSavePost}>
@@ -263,33 +324,17 @@ const Blog = (props) => {
                     </Button>
                   </DialogActions>
               </Dialog>
+
+              <ConfirmDelete    open={isConfirmDeleteOpen} 
+                                onClose={()=>{setIsConfirmDeleteOpen(false)}}
+                                onConfirm={()=>{handleDeletePost()}}
+                                />
         </>
     );
 };
 
 export default Blog;
 
-const startAdornement=()=>{
-    return(
-        <Grid container 
-        alignItems="center"
-        justifyContent="center" >
-            <Grid item  >
-            <Avatar alt="profile" sx={{ bgcolor: deepOrange[500],cursor:'pointer' }}  style={{alignSelf: 'center'}}>N</Avatar>
-            </Grid>
-        </Grid>
-    )
-}
-const endAdornement=(props)=>{
-    
-    return(
-        <Grid {...props}>
-                            
-                            <Button variant='outlined'  sx={{fontSize:'0.8vw',padding:'0.8vh',margin:'0.4vh', color:'#000'}} endIcon={<SendIcon />}>Comment</Button>
-                            
-        </Grid>
-        )
-    } 
     
     
  

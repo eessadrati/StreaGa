@@ -47,7 +47,7 @@ const InputField = ({...props}) => {
             )} 
             <Grid container>
                 <Grid item xs={11}>
-                    <Typography color="error" marginLeft='0.3vw'>{errorMessage}</Typography>
+                    <Typography color="error" marginLeft='0.3vw' sx={{fontSize:'1vw'}}>{errorMessage}</Typography>
                 </Grid>
                 <Grid item xs={1}>
                     {length && <Typography  marginLeft='0.4vw'>{length}</Typography>}

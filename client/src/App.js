@@ -1,11 +1,18 @@
-import React from 'react';
-import { createTheme, ThemeProvider } from '@mui/material';
-import Router from "./routes/Router";
 
+import React from 'react';
+import { createTheme, ThemeProvider, Grid } from '@mui/material';
+import Router from "./routes/Router";
+import Navbar from "./components/pages/Navbar.js";
+import useWindowDimensions from './utils/useWindowDimensions';
 
 const theme = createTheme({
   palette: {
+    color:{
+      main:'#0E185F',
+      primary: '#F7F7F8',
+    },
     background: {
+      main:'#0E185F',
       primary: '#F7F7F8',
       secondary: '#fafafa',
     },
@@ -25,12 +32,13 @@ const theme = createTheme({
 });
 
 function App() {
-  
+  const {height}=useWindowDimensions();
   return (
     <ThemeProvider theme={theme}>
+      <Grid  sx={{ height:height,overflow:'hidden'}}>
        <Router/>
+      </Grid>
     </ThemeProvider>
-   
   );
 }
 

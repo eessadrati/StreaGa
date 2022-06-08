@@ -1,4 +1,3 @@
-
 import React,{useState} from "react";
 import Video from "./Video";
 import {Tabs,Tab,Box, IconButton, Grid, CssBaseline, Typography, Divider, Paper} from '@mui/material';
@@ -13,6 +12,7 @@ import useWindowDimensions from './../../utils/useWindowDimensions';
 import Title from './../../layout/Title';
 import { hideScrollBar } from "../../utils/Style";
 import AvaTy from './../../layout/AvaTy';
+import Events from './../Events';
 
 
 const Home = () => {
@@ -26,7 +26,7 @@ const Home = () => {
   return (
     <>
     <CssBaseline/>
-    <Grid container sx={{height:height,overflow:'hidden'}}>
+    <Grid container direction="row" sx={{ overflow:'hidden'}}>
       <Grid item xs={2} sx={{height:height,overflow:'auto',...hideScrollBar}}>
         <Paper variant="outlined"  sx={{bgcolor:'background.secondary',padding:'1vh 0.4vw'}}>
         <Title title="Followed channels" />
@@ -51,7 +51,7 @@ const Home = () => {
       </Tabs>
       {value === 'home' && <Videos/>}
       {value === 'blog' && <Blogs/>}
-      {value === 'event' && <Blogs/>}
+      {value === 'event' && <Events/>}
       </Grid>
       
     </Grid>

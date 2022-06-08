@@ -8,12 +8,13 @@ import Channel from './../components/pages/Channel';
 import Create from './../components/pages/Create';
 import Profile from '../components/pages/Profile';
 import Video from '../components/pages/Video';
-
+import Navbar from "../components/pages/Navbar";
 const Router = () => {
     //const {user} = useContext(AuthContext);
     
     return (
         <BrowserRouter>
+            <Navbar />
             <Routes> 
             <Route exact path="/" element={<Home/>}>
             </Route>
