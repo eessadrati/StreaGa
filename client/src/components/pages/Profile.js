@@ -26,36 +26,39 @@ import FormData from 'form-data'
 import DeleteIcon from '@mui/icons-material/Delete';
 const { IvsClient, CreateChannelCommand, CreateRecordingConfigurationCommand, GetStreamCommand  } = require("@aws-sdk/client-ivs");
 
+
 const Profile = () => {
     const {height}=useWindowDimensions();
-    const {user,setUser}=useContext(AuthContext);
+    const {user}=useContext(AuthContext);
+    //const [user,setUser]=useState({...userContext})
+    //console.log(user)
     const [userInfo, setUserInfo]=useState("");
-    const [streamServer, setStreamServer] = useState("");
-    const [streamKey, setStreamKey] = useState("");
-    const [playbackUrl, setPlaybackUrl] = useState("");
     const [isMe, setIsMe]=useState(false);
-    const [channels, setChannels] = useState(["123","456"]);
+    const [channels, setChannels] = useState([]);
     const [followedchannels, setFollowedchannels]=useState([])
     const [value, setValue] = useState('Personal Infos');
     const [editInfosIsOpen, setEditInfosIsOpen] = useState(false);
     const [createChannelIsOpen, setCreateChannelIsOpen] = useState(false);
     const [dialogIsOpen, setDialogIsOpen] = useState(false);
     const [channelName, setChannelName] = useState('');
-    const [username, setUsername]=useState('');
-    const [firstName, setFirstName]=useState('');
-    const [lastName, setLastName]=useState('');
-    const [email, setEmail]=useState('');
-    const [country, setCountry]=useState('');
-    const [gender, setGender]=useState('');
-
-    const [birthday, setBirthday]=useState();
-    const [phone, setPhone]=useState();
     const [channelNameError, setChannelNameError] = useState('');
     const [channelDescription, setChannelDescription] = useState('');
     const [channelTags, setChannelTags] = useState([]);
     const dialogRef=useRef(null);
     const moreButtonRef=useRef(null);
-    let { username:usernameParam } = useParams(); 
+    let { username:usernameParam } = useParams();
+    
+    useEffect(()=>{
+        const fetch=async ()=>{
+            if(user){
+              /* await axios.get(`${channelURL}/userchannels/userId`).then(res=>{
+                   setChannels(res.data)
+               })*/
+          }
+        }
+        fetch()
+        
+    },[user])
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
@@ -64,11 +67,10 @@ const Profile = () => {
      const check= async()=>{
         if(user.username===usernameParam){
             setIsMe(true)
-            setUserInfo(user)
+            setUserInfo({...user})
         }else{
-            console.log("chihaja")
            setIsMe(false)
-           await axios.get(`${userURL}/${usernameParam}`).then((res)=>{
+           await axios.get(`${userURL}/user/${usernameParam}`).then((res)=>{
             setUserInfo(res.data)
            })  
         }
@@ -76,14 +78,7 @@ const Profile = () => {
      check()
    },[user,usernameParam])
   
-   useEffect(()=>{
-      if(userInfo){
-          //get all channels
-
-          //get followedchannels
-
-      }
-   },[userInfo])
+  
 
     useOutsideClick(dialogRef,moreButtonRef,() => setDialogIsOpen(false));
     
@@ -181,16 +176,16 @@ const Profile = () => {
           'Content-Type': `multipart/form-data; boundary=${dataa._boundary}`,
         }
       })
-        console.log(res)
+       
        const upData={
             profileImg:{
                 url:res.data.secure_url,
                 cloudinary_id:res.data.public_id
             }
         }
-        await axios.put(`${userURL}/${userInfo._id}`, upData).then((res)=>{
-          localStorage.setItem("user",JSON.stringify(res.data))
-        //  setUser(res.data)
+        await axios.put(`${userURL}/${user._id}`, upData).then((res)=>{
+           localStorage.setItem("user",JSON.stringify(res.data))
+        // setUser(res.data)
        })
        
     }
@@ -205,7 +200,7 @@ const Profile = () => {
                  cloudinary_id:''
              }
          }
-         await axios.put(`${userURL}/${userInfo._id}`, upData).then((res)=>{
+         await axios.put(`${userURL}/${user._id}`, upData).then((res)=>{
            localStorage.setItem("user",JSON.stringify(res.data))
           // setUser(res.data)
            
@@ -213,11 +208,11 @@ const Profile = () => {
     }
     
     return (
-        <Grid container direction="row" sx={{height:height ,overflow:'auto'}} >
+        <Grid container direction="row" sx={{height:height-height/8 ,overflow:'auto'}} >
             <CssBaseline />
             <Grid item xs={3} sx={styles.firstcol} >
             <Grid sx={{position: 'relative',top: 0,left: 0}}>
-            {userInfo &&<img src={userInfo.profileImg.url ? userInfo.profileImg.url:'/profile.jpg'} alt='' style={styles.profilePic} />}
+            {user && user.profileImg &&<img src={user.profileImg.url ? user.profileImg.url:'/profile.jpg'} alt='' style={styles.profilePic} />}
                 {isMe && <Grid  sx={{zIndex:'40',display:'flex',position: 'absolute',bottom: 15,right: 30}}>
                     <FileInput handleFileUpload={handleFileUpload}/>
                     <DeleteIcon onClick={handleDeleteProfile} sx={{cursor:'pointer', color:'color.main'}}/>
@@ -233,14 +228,16 @@ const Profile = () => {
                     <Grid item xs={9}>
                         <Divider sx={{marginRight:'20px'}} />
                     </Grid> 
-                    {channels && channels.map((channel,index)=>(
-                        <Channel srcImg='profile.jpg' name="chaine dial lqhab" sx={styles.channelsList} />
-                    ))
-                    }
-                    {!channels &&  <Typography variant="body1" component="div" gutterBottom>
+                    
+                    {channels && channels.lenght>0 ? channels.map((channel,index)=>(
+                        <Channel srcImg={channel.logo.logo_url} name={channel.name} sx={styles.channelsList} />
+                    )):(
+                        <Typography variant="body1" component="div" gutterBottom>
                         No available channels.
                     </Typography>
-                    }                
+                    )
+                    }
+                                   
                    {isMe && <Button  
                         variant="contained"
                         sx={styles.button}
@@ -253,18 +250,18 @@ const Profile = () => {
 
             <Grid item xs={9} sx={styles.secondcol} >
                 <Typography variant="h4" component="div" >
-                   {userInfo && <span>{`${userInfo.firstName} ${userInfo.lastName}`}</span>}
+                   {user && <span>{`${user.firstName} ${user.lastName}`}</span>}
                 </Typography>
                 <Typography variant="h5"  component="div">
-                {userInfo && <span>{`${userInfo.username}`}</span>}
+                {user && <span>{`${user.username}`}</span>}
                 </Typography>
                 <Grid container direction="row" sx={styles.location} >
                     <LocationOnIcon />
                     <Typography variant="subtitle1" component="div">
-                        {userInfo &&(
+                        {user &&(
                             <>
-                                {userInfo.country ?(
-                                    <span>{userInfo.country}</span>
+                                {user.country ?(
+                                    <span>{user.country}</span>
                                 ):(
                                     <span>Undetermined</span>
                                 )}
@@ -274,7 +271,7 @@ const Profile = () => {
                 </Grid>
                 <Grid container direction="row" sx={styles.joinedOn} >
                     <Typography variant="subtitle1" component="div">
-                        Joined on:{userInfo && <span>{moment(userInfo.timestamp).format('LL')}</span>}
+                        Joined on:{user && <span>{moment(user.timestamp).format('LL')}</span>}
                     </Typography>
                 </Grid>
                 <Grid item xs={10} sx={styles.editIcon}>
@@ -292,10 +289,10 @@ const Profile = () => {
                         Gender
                     </Typography>
                     <Typography variant="subtitle1" component="div">
-                    {userInfo &&(
+                    {user &&(
                             <>
-                                {userInfo.gender ?(
-                                    <span>{userInfo.gender}</span>
+                                {user.gender ?(
+                                    <span>{user.gender}</span>
                                 ):(
                                     <span>Undetermined</span>
                                 )}
@@ -308,10 +305,10 @@ const Profile = () => {
                         Birthday
                     </Typography>
                     <Typography variant="subtitle1" component="div">
-                    {userInfo &&(
+                    {user &&(
                             <>
-                                {userInfo.birthday ?(
-                                    <span>{moment(userInfo.birthDate).format('LL')}</span>
+                                {user.birthDate ?(
+                                    <span>{moment(user.birthDate).format('LL')}</span>
                                 ):(
                                     <span>Undetermined</span>
                                 )}
@@ -324,7 +321,7 @@ const Profile = () => {
                         Email
                     </Typography>
                     <Typography variant="subtitle1" component="div" >
-                        {userInfo && <span>{`${userInfo.email}`}</span>}
+                        {user && <span>{`${user.email}`}</span>}
                     </Typography>
                 </Grid>
                 <Grid container direction="row" sx={styles.personalInfos} >
@@ -332,7 +329,7 @@ const Profile = () => {
                         Phone number 
                     </Typography>
                     <Typography variant="subtitle1" component="div">
-                       {userInfo && <span>{`${userInfo.phoneNumber}`}</span>}
+                       {user && <span>{`${user.phoneNumber}`}</span>}
                     </Typography>
                 </Grid>
 
@@ -342,9 +339,9 @@ const Profile = () => {
                     </Typography>
                 </Grid>
                 <Divider sx={{marginRight:'160px', marginBottom:'30px'}} />
-                <Channel srcImg='profile.jpg' name="chaine dial zwamel" sx={styles.followedChannelsList}/>
-                <Channel srcImg='profile.jpg' name="chaine dial lqhab" sx={styles.followedChannelsList} />
-                <Channel srcImg='profile.jpg' name="chaine dial zwamel 2" sx={styles.followedChannelsList} />
+                <Channel  name="keynavas" sx={styles.followedChannelsList}/>
+                <Channel  name="kouttane" sx={styles.followedChannelsList}/>
+                <Channel  name="7achami" sx={styles.followedChannelsList}/>
             </Grid>
 
             <Dialog

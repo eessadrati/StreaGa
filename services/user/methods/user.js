@@ -40,7 +40,7 @@ const getUser =(req, res) => {
 
 const getUserByUsername =(req, res) => {
     
-    User.findById(req.params.username, function (err, users) {
+    User.find({username:req.params.username}, function (err, users) {
         if (err){
             console.log(err);
         }

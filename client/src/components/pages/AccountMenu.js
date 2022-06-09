@@ -22,8 +22,7 @@ import AuthContext from './../../context/AuthContext';
 export default function AccountMenu() {
   const {loggedIn,getCurrentUser,setLoggedIn,user}=useContext(AuthContext)
   //const [user, setUser]=useState("");
-  console.log(user.profileImg)
-console.log("user")
+  
 //console.log(localStorage.getItem('user'))
   const [anchorEl, setAnchorEl] = useState(null);
   const navigate= useNavigate()
@@ -34,13 +33,7 @@ console.log("user")
   const handleClose = () => {
     setAnchorEl(null);
   };
-useEffect(()=>{
- if(loggedIn){
- const us= JSON.parse((localStorage.getItem('user')))
-   console.log(us.username)
-  // setUser(us)
- }
-},[loggedIn])
+
  
 const handleLogOut=  ()=>{
   localStorage.removeItem('userId');

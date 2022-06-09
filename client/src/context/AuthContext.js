@@ -10,7 +10,7 @@ const AuthContextProvider = (props) => {
   const [loading, setLoading] = useState(true);
   const userId = localStorage.getItem('userId');
   const userFromLocalStorage = localStorage.getItem('user');
-  console.log(user);
+  
  /* async function getCurrentUser(){
      setLoading(true);
      await axios.get(`${authURL}/currentUser`).then((res)=>{

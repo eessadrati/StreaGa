@@ -42,7 +42,7 @@ const Login = () => {
             console.log(res);
             localStorage.setItem('userId', res.data.dummy._id);
             localStorage.setItem('user', JSON.stringify(res.data.dummy));
-            console.log(JSON.stringify(res.data.dummy))
+            
           });
           setLoggedIn(true)
           getCurrentUser();

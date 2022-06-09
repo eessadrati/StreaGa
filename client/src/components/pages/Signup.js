@@ -158,6 +158,8 @@ const Signup = () => {
       await axios.post(`${userURL}/create`, user).then((res) => {
         console.log(res);
         localStorage.setItem('userId', res.data._id);
+        localStorage.setItem('user', JSON.stringify(res.data));
+        
       });
       setLoggedIn(true)
       getCurrentUser();

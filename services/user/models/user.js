@@ -46,15 +46,18 @@ const UserSchema = new mongoose.Schema({
     },
     birthDate : {
         type : Date,
+        default:''
     },
     country : {
         type : String,
+        default:''
     },
     channelId : {
         type : String,
     },
     gender : {
         type : String,
+        default:''
     },
     followedChannels:{
         type:Array,
