@@ -43,6 +43,29 @@ router.post("/", (req, res, next) => {
     });
 });
 
+// get all channels by userId
+router.get("/userchannels/:userId", (req, res, next) => {
+  const id = req.params.userId;
+  Channel.find({ userId: id })
+    .exec()
+    .then((doc) => {
+      console.log("Frome data base", doc);
+      if (doc) {
+        res.status(200).json(doc);
+      } else {
+        res
+          .status(404)
+          .json({ message: "No valid entry found for provided ID" });
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).json({
+        error: err,
+      });
+    });
+});
+
 router.get("/:channelId", (req, res, next) => {
   const id = req.params.channelId;
   Channel.findById(id)
