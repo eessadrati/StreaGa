@@ -15,7 +15,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
 
-console.log(process.env.CLOUDINARY_API_SECRET)
 //connect to database, btw i used my database 'admin' so you must use your own database to run the code succefully
 const connectDB = async () => {
     try {

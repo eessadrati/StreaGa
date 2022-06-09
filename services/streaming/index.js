@@ -5,10 +5,13 @@ const mongoose = require('mongoose')
 const app = express()
 const PORT = 1111;
 
-app.use(cors())
+app.use(cors({
+    origin: ["http://localhost:3000"],
+    credentials: true,
+  }));
 app.use(express.json())
 
-const MONGODB_URI = 'mongodb+srv: //odim:TjckOtWHyxXERa8i@cluster0.fecgf.mongodb.net/Streaga?retryWrites=true&w=majority'
+const MONGODB_URI = 'mongodb+srv://odim:TjckOtWHyxXERa8i@cluster0.fecgf.mongodb.net/Streaga?retryWrites=true&w=majority'
 
 mongoose.connect(MONGODB_URI, {
     useNewUrlParser: true,

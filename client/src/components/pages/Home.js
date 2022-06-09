@@ -19,10 +19,6 @@ import AuthContext from './../../context/AuthContext';
 const Home = () => {
   const [value, setValue] = useState('home');
   const {user, userId,loggedIn}=useContext(AuthContext);
-  console.log(user);
-  console.log(userId);
-  console.log(loggedIn);
-  console.log("yesss")
   const {height}=useWindowDimensions();
   const followedChannels = [{srcImg:'/eye.webp',name:"channel1",id:"1"},{srcImg:'',name:"channel2",id:"2"},{srcImg:'/eye.webp',name:"channel3",id:"3"}];
 

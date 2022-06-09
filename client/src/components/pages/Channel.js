@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState, useContext} from 'react'
 import Avatar from '@mui/material/Avatar';
 import { Grid, Button, CssBaseline, Divider, Typography, Chip, Tab, Tabs } from '@mui/material/';
 import Video from "../../layout/VideoCard";
@@ -15,24 +15,28 @@ import Tag from '../../layout/Tag';
 import moment from 'moment';
 import axios from 'axios';
 import { convertToReadableFormat } from './../../utils/Functions';
+import AuthContext from './../../context/AuthContext';
+
 
 export default function Channel() {
-    
+    const {user}=useContext(AuthContext);
+    const [streamServer, setStreamServer] = useState("bb22679c1b21.global-contribute.live-video.net:443/app/");
+    const [streamKey, setStreamKey] = useState("sk_eu-west-1_aOzq9VWZqEjg_acsq661jPr0i8SReqx0QWOl0NbiHOt");
     const {height}=useWindowDimensions();
     const [value, setValue] = useState('uploaded videos');
     const [channel,setChannel]= useState({
         id:'',
-        name:'channel name',
+        name:'Pewdipie',
         userId:'',
         logo:{
             logo_url: '/eye.webp'
         },
         cover:{
-            cover_url: '/eye.webp'
+            cover_url: '/cover.jpg'
         },
-        description:' decription',
+        description:'Channel for gaming and chilling. Feel free to join us !',
         subscribers:["1","2"],
-        tags:["1","2"],
+        tags:["Valorant","Fifa22"],
         videos:["1","2"],
         createdAt:"2022-06-06T19:26:32.365+00:00"
 
@@ -156,24 +160,27 @@ export default function Channel() {
             <Grid item >
                 <Grid container sx={styles.pdp_titles} spacing={2} >
                     <Grid item >
-                        <Avatar src={logo.logo_url ? logo.logo_url: '/profile.jpg'} alt="Profile" sx={styles.profile} />
+                        <Avatar src="/eye.webp" alt="Profile" sx={styles.profile} />
                     </Grid>
                     <Grid item > {/* xs zeroMinWidth   direction="column" justifyContent="center" alignItems="center"*/}
                         <Typography variant="h5">{name}</Typography>
-                        <Typography variant="body1" color="gray" >{convertToReadableFormat()} followers</Typography>
+                        <Typography variant="body1" color="gray" >{convertToReadableFormat()}37.5k followers</Typography>
                     </Grid>
                 </Grid>
             </Grid>
             <Grid item sx={{marginRight: '100px',}}>
-            {isMyChannel ? (
-                <Button onClick={()=>setEditChannelIsOpen(true)} variant="contained" startIcon={<EditIcon/>} sx={{ bgcolor:'color.main'}}  >
-                    Edit
-                </Button>
-            ):(
-                <Button variant="contained" >
-                    Follow
-                </Button>
+            {user && (
+                isMyChannel ? (
+                    <Button onClick={()=>setEditChannelIsOpen(true)} variant="contained" startIcon={<EditIcon/>} sx={{ bgcolor:'color.main'}}  >
+                        Edit
+                    </Button>
+                ):(
+                    <Button variant="contained" sx={{ bgcolor:'color.main'}}>
+                        Follow
+                    </Button>
+                )
             )}
+            
                 
             </Grid>
             <Dialog
@@ -251,11 +258,41 @@ export default function Channel() {
                 onChange={handleChange}
                 sx={styles.tabs}
             >
-                <Tab value="uploaded videos" label={<Typography variant="h6" >Uploaded videos</Typography>}  sx={{textTransform:'none'}} />
+                <Tab value="uploaded videos" label={<Typography variant="h6" >Videos</Typography>}  sx={{textTransform:'none'}} />
                 <Tab value="followers" label={<Typography variant="h6" >Followers</Typography>} sx={{textTransform:'none'}} />
+                {user && <Tab value="streamConfig" label={<Typography variant="h6" >Stream Configuration</Typography>} sx={{textTransform:'none'}} />}
             </Tabs>
             {value === 'uploaded videos' && <UploadedVideos  videos={videos}/>}
             {value === 'followers' && <FollowersList/>}
+            {value === 'streamConfig'
+             && <>
+                    <Grid container >
+                        <Grid container direction="row" sx={styles.personalInfos} >
+                            <Typography variant="subtitle1" component="div" fontWeight="bold" >
+                                Stream server
+                            </Typography>
+                            <Typography variant="subtitle1" component="div">
+                                {"rtmps://"+streamServer}
+                            </Typography>
+                        </Grid>
+                        <Grid container direction="row" sx={styles.personalInfos} >
+                            <Typography variant="subtitle1" component="div" fontWeight="bold" >
+                                Stream key
+                            </Typography>
+                            <Typography variant="subtitle1" component="div">
+                                {streamKey}
+                            </Typography>
+                        </Grid>
+                        <Divider />
+                       
+                        <Grid container direction="row" sx={styles.text} > 
+                            <Typography variant="body1" component="div"  >
+                                Copy the configuration above to stream in OBS Studio. <br />
+                                Never stop sharing your passion with the world !
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                </>}
         </Grid> 
     </Grid>
     <br/><br/>
@@ -301,4 +338,12 @@ const styles = {
     tabs: {
         marginBottom: '24px',
     },
+    personalInfos: {
+        marginTop: '10px',
+        display: 'flex',
+        gap: '50px',
+    },
+    text: {
+        marginTop: '40px',
+    }
 }

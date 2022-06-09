@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
@@ -17,18 +17,20 @@ import { Grid, Button, CssBaseline, Divider, Typography, styled, Tabs, Tab, Icon
   Dialog, DialogTitle,DialogContent,DialogActions } from '@mui/material/';
 import AddBlog from "./AddBlog";
 import AddEvent from "./AddEvent";
-import Channel from "../layout/AvaTy"
+import Channel from "../layout/AvaTy";
+import AuthContext from './../context/AuthContext';
 
 
 
 export default function AddMenu() {
+  const {user, userId,loggedIn}=useContext(AuthContext);
   const [anchorEl, setAnchorEl] = useState(null);  
   const [addBlogIsOpen, setAddBlogIsOpen] = useState(false);
   const [addEventIsOpen, setAddEventIsOpen] = useState(false);
   const [streamConfigIsOpen, setStreamConfigIsOpen] = useState(false);
   const [streamDetailsIsOpen, setStreamDetailsIsOpen] = useState(false);
-  const [streamServer, setStreamServer] = useState("");
-  const [streamKey, setStreamKey] = useState("");
+  const [streamServer, setStreamServer] = useState("bb22679c1b21.global-contribute.live-video.net:443/app/");
+  const [streamKey, setStreamKey] = useState("sk_eu-west-1_aOzq9VWZqEjg_acsq661jPr0i8SReqx0QWOl0NbiHOt");
   const [playbackUrl, setPlaybackUrl] = useState("");
   const [streamTitle, setStreamTitle] = useState("");
   const [streamDescription, setStreamDescription] = useState("");
@@ -89,7 +91,7 @@ export default function AddMenu() {
   }
 
   const getAllchannels = () => {
-    axios.get(`http://localhost:6666/channels/userchannels/userId`) //${userId}
+    axios.get(`http://localhost:6666/channels/userchannels/${user._id}`) //${userId}
     .then(res => { 
       if (res === []) {
         return <Typography variant="body1">No channels found. Please create a new channel then try again.</Typography>
@@ -252,7 +254,8 @@ export default function AddMenu() {
             </DialogTitle>
             <DialogContent dividers>
                 <Grid container direction="row" spacing={1} sx={styles.container}>
-                    {getAllchannels()}
+                    {/*getAllchannels*/}
+                    <Channel srcImg="/eye.webp" name="Pewdipie" sx={styles.channelsList} />
                 </Grid>
             </DialogContent>
             <DialogActions>
@@ -265,6 +268,7 @@ export default function AddMenu() {
           {/* Streaming config dialog */}
           <Dialog
             fullWidth
+            maxWidth="md"
             open={streamConfigIsOpen}
             >
             <DialogTitle sx={{m:'0',p:'1.5vh 0.4vw' }}>
@@ -301,11 +305,12 @@ export default function AddMenu() {
                         </Typography>
                     </Grid>
                     <Divider />
-                    <Grid container direction="row" sx={styles.personalInfos} >
+
+                    <Grid container direction="row" sx={styles.personalInfos} > 
                         <Typography variant="body1" component="div"  >
                             Copy the configuration above to stream in OBS Studio. <br />
                             You can always find this configuration in your channel page. <br />
-                            Share you passion with the world !
+                            Share your passion with the world !
                         </Typography>
                     </Grid>
                 </Grid>
@@ -348,6 +353,11 @@ const styles = {
           backgroundColor:'#ececec',
           cursor:'pointer'
       }
+  },
+  personalInfos: {
+    marginTop: '10px',
+    display: 'flex',
+    gap: '30px',
   },
 };
     

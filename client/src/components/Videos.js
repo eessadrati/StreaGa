@@ -28,11 +28,10 @@ const Videos = () => {
     return (
         <Grid sx={{maxHeight:height-height/7, overflow:'auto',...hideScrollBar}}>
         <VideoList videoList={videoList} listTitle={"Videos from followed channels"}/>
-        <VideoList videoList={videoList} listTitle={"chi haja kayn hna"}/>
-        <VideoList videoList={videoList} listTitle={"chi haja kayn hna 2"}/>
-        <VideoList videoList={videoList} listTitle={"chi haja kayn hna 3"}/>
-        <VideoList videoList={videoList} listTitle={"chi haja kayn hna 4"}/>
-        <VideoList videoList={videoList} listTitle={"chi haja kayn hna 5"}/>
+        <VideoList videoList={videoList} listTitle={"Because you watched Pewdipie"}/>
+        <VideoList videoList={videoList} listTitle={"Suggested videos"}/>
+        <VideoList videoList={videoList} listTitle={"Finish watching"}/>
+        <VideoList videoList={videoList} listTitle={"For you"}/>
 
 </Grid>
 )}
