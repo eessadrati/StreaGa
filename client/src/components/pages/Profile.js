@@ -114,7 +114,7 @@ const Profile = () => {
                 "secretAccessKey": secretAccessKey
             }
         }
-        var newChannel = {
+      var newChannel = {
             "authorized": false,
             "latencyMode": "NORMAL",
             "name": channelName,
@@ -134,17 +134,25 @@ const Profile = () => {
         //const bucketCommand = new CreateRecordingConfigurationCommand(newBucket);
         const channelRes = await client.send(channelCommand);
         //const bucketRes = await client.send(bucketCommand);
-       
+        const  streamServer=channelRes.channel.ingestEndpoint;
+        const  streamKey = channelRes.streamKey.value;
+        const playbackUrl= channelRes.channel.playbackUrl;
+       console.log(streamServer)
+       console.log(streamKey)
+       console.log(playbackUrl)
         const data={
             name:channelName,
             userId:user._id,
             description:channelDescription,
             tags:channelTags,
-            streamServer:channelRes.channel.ingestEndpoint,
-            streamKey:channelRes.streamKey.value,
-            playbackUrl:channelRes.channel.playbackUrl
+            streamServer:streamServer,
+            streamKey:streamKey,
+            playbackUrl:playbackUrl
+            
         }
-        
+        /**
+         * 
+         */
         await axios.post(channelURL, data)
         .then(res=>{
             console.log(res.data);
@@ -232,8 +240,10 @@ const Profile = () => {
                         <Divider sx={{marginRight:'20px'}} />
                     </Grid> 
                     
-                    {channels && channels.lenght>0 ? channels.map((channel,index)=>(
+                    {channels  ? channels.map((channel,index)=>(
+                        <Grid component={Link} to="/channel" sx={styles.channelsList}>
                         <Channel srcImg={channel.logo.logo_url} name={channel.name} sx={styles.channelsList} />
+                        </Grid>
                     )):(
                         <Grid component={Link} to="/channel" sx={styles.channelsList}>
                         <Channel srcImg="/eye.webp" name="Pewdipie" sx={styles.channelsList} />

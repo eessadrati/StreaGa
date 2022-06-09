@@ -27,6 +27,10 @@ router.post("/", (req, res, next) => {
     userId: req.body.userId,
     tags: req.body.tags,
     description: req.body.description,
+    streamServer: req.body.streamServer,
+    streamKey: req.body.streamKey,
+    playbackUrl: req.body.playbackUrl
+    
   });
   channel.save()
     .then((result) => {

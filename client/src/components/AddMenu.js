@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
@@ -19,6 +19,7 @@ import AddBlog from "./AddBlog";
 import AddEvent from "./AddEvent";
 import Channel from "../layout/AvaTy";
 import AuthContext from './../context/AuthContext';
+import { channelURL } from './../config/Config';
 
 
 
@@ -29,8 +30,8 @@ export default function AddMenu() {
   const [addEventIsOpen, setAddEventIsOpen] = useState(false);
   const [streamConfigIsOpen, setStreamConfigIsOpen] = useState(false);
   const [streamDetailsIsOpen, setStreamDetailsIsOpen] = useState(false);
-  const [streamServer, setStreamServer] = useState("bb22679c1b21.global-contribute.live-video.net:443/app/");
-  const [streamKey, setStreamKey] = useState("sk_eu-west-1_aOzq9VWZqEjg_acsq661jPr0i8SReqx0QWOl0NbiHOt");
+  const [streamServer, setStreamServer] = useState("");//bb22679c1b21.global-contribute.live-video.net:443/app/
+  const [streamKey, setStreamKey] = useState(""); //sk_eu-west-1_aOzq9VWZqEjg_acsq661jPr0i8SReqx0QWOl0NbiHOt
   const [playbackUrl, setPlaybackUrl] = useState("");
   const [streamTitle, setStreamTitle] = useState("");
   const [streamDescription, setStreamDescription] = useState("");
@@ -41,9 +42,23 @@ export default function AddMenu() {
   const [recordingConfigurationArn, setRecordingConfigurationArn] = useState("");
   const [tagsList,setTagsList]=useState([]);
   const [selectChannelIsOpen, setSelectChannelIsOpen] = useState(false);
-
+  const [channels, setChannels] = useState([]);
 
   const open = Boolean(anchorEl);
+
+  useEffect(()=>{
+    const fetch=async ()=>{
+        if(user){
+           await axios.get(`${channelURL}/userchannels/${user._id}`).then(res=>{
+                console.log(res.data)
+                setChannels(res.data)
+           })
+      }
+    }
+    fetch()
+    
+},[user])
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -55,6 +70,7 @@ export default function AddMenu() {
   }
   const handleSelectChannel = (channelId) => {
     setChannelId(channelId);
+    console.log(channelId)
     setSelectChannelIsOpen(false);
     setStreamDetailsIsOpen(true)
   }
@@ -80,12 +96,14 @@ export default function AddMenu() {
     .catch(err => console.log(err))
   }
 
-  const getStreamingConfig = () => {
-    axios.get(`http://localhost:6666/channels/${channelId}`)
+  const getStreamingConfig = async () => {
+   await axios.get(`${channelURL}/${channelId}`)
     .then(res => {
-      setStreamKey(res.StreamKey)
-      setStreamServer(res.StreamServer)
-      setPlaybackUrl(res.PlaybackUrl)
+      console.log(res)
+      setStreamKey(res.data.streamKey)
+
+      setStreamServer(res.data.streamServer)
+      setPlaybackUrl(res.data.playbackUrl)
     })
     .catch(err => console.log(err))
   }
@@ -214,7 +232,7 @@ export default function AddMenu() {
                         name="tags"
                         tags={tagsList}
                         placeholder="add tag"
-                        id="outlined-basic" label="Tags" variant="outlined"
+                         label="Tags" 
                         value={tags} onChange={e => setTags(tags.push(e.target.value))}
                         />
                     </Grid>
@@ -254,12 +272,22 @@ export default function AddMenu() {
             </DialogTitle>
             <DialogContent dividers>
                 <Grid container direction="row" spacing={1} sx={styles.container}>
-                    {/*getAllchannels*/}
-                    <Channel srcImg="/eye.webp" name="Pewdipie" sx={styles.channelsList} />
+                    {/*getAllchannels
+                    <Channel srcImg="/eye.webp" name="Pewdipie" sx={styles.channelsList} />*/}
+                    {channels  ? channels.map((channel,index)=>(
+                        <Grid  item xs={12} onClick={()=>handleSelectChannel(channel._id)}  sx={styles.channelsList} key={index} >
+                        <Channel srcImg={channel.logo.logo_url} name={channel.name} sx={styles.channelsList} />
+                        </Grid>
+                    )):(
+                        <Grid item  xs={12} sx={styles.channelsList}>
+                        <Channel item srcImg="/eye.webp" name="Pewdipie" sx={styles.channelsList} />
+                        </Grid>
+                    )
+                    }
                 </Grid>
             </DialogContent>
             <DialogActions>
-                <Button autoFocus onClick={handleSelectChannel}>
+                <Button autoFocus >
                     Select
                 </Button>
             </DialogActions>

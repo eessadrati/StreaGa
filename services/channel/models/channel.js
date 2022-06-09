@@ -10,6 +10,18 @@ const channelSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  streamServer: {
+    type: String,
+    default:""
+  },
+  streamKey: {
+    type: String,
+    default:""
+  },
+  playbackUrl: {
+    type: String,
+    default:""
+  },
   logo: {
     logo_url: {
       type: String,
