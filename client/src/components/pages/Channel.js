@@ -13,6 +13,7 @@ import InputField from './../../layout/InputField';
 import TagsInput from './../../layout/TagsInput';
 import Tag from '../../layout/Tag';
 import moment from 'moment';
+import axios from 'axios';
 import { convertToReadableFormat } from './../../utils/Functions';
 
 export default function Channel() {
@@ -113,6 +114,18 @@ export default function Channel() {
         setTags(channel.tags);
         setEditChannelIsOpen(false);
     }
+
+    const updateChannel = () => {
+        const updateChannel = {
+            name: channel.name,
+            description: channel.description,
+            tags: channel.tags,
+        }
+        axios.patch(`http://localhost:6666/channels/${channel.id}`, updateChannel)
+        .then(res => console.log(res))
+        .catch(err => console.log(err));           
+    }
+
   return (
     <Grid container direction="row" sx={{height:height-height/9 ,overflow:'auto'}}>
         <CssBaseline />

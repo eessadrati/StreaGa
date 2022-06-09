@@ -17,6 +17,8 @@ import { Grid, Button, CssBaseline, Divider, Typography, styled, Tabs, Tab, Icon
   Dialog, DialogTitle,DialogContent,DialogActions } from '@mui/material/';
 import AddBlog from "./AddBlog";
 import AddEvent from "./AddEvent";
+import Channel from "../layout/AvaTy"
+
 
 
 export default function AddMenu() {
@@ -36,6 +38,8 @@ export default function AddMenu() {
   const [tags, setTags] = useState([]);
   const [recordingConfigurationArn, setRecordingConfigurationArn] = useState("");
   const [tagsList,setTagsList]=useState([]);
+  const [selectChannelIsOpen, setSelectChannelIsOpen] = useState(false);
+
 
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -47,9 +51,13 @@ export default function AddMenu() {
   const handleTagsList =(items) =>{
     setTagsList(items);
   }
- 
+  const handleSelectChannel = (channelId) => {
+    setChannelId(channelId);
+    setSelectChannelIsOpen(false);
+    setStreamDetailsIsOpen(true)
+  }
   const startLiveStream = () => {
-    setStreamDetailsIsOpen(true);
+    setSelectChannelIsOpen(true);
   }
  
   const handleCreateStreamInDB = () => {
@@ -69,6 +77,41 @@ export default function AddMenu() {
     .then(res => console.log(res.data))
     .catch(err => console.log(err))
   }
+
+  const getStreamingConfig = () => {
+    axios.get(`http://localhost:6666/channels/${channelId}`)
+    .then(res => {
+      setStreamKey(res.StreamKey)
+      setStreamServer(res.StreamServer)
+      setPlaybackUrl(res.PlaybackUrl)
+    })
+    .catch(err => console.log(err))
+  }
+
+  const getAllchannels = () => {
+    axios.get(`http://localhost:6666/channels/userchannels/userId`) //${userId}
+    .then(res => { 
+      if (res === []) {
+        return <Typography variant="body1">No channels found. Please create a new channel then try again.</Typography>
+      }
+      else {
+        res.map((channel) => {
+        return <Channel srcImg={channel.logo} name={channel.name} 
+                  onClick={handleSelectChannel(channel._id)} sx={styles.channelsList}
+                />
+        })
+      }
+    })
+  }
+  
+  /*
+    1. create new live 
+    2. select what channel to create the live with
+      2.1 if listChannels == [] : echo "sry, u can't create a live stream without channels"
+      2.2 if listChannels != [] : open dialog to select channel
+    3. create new live stream in DB (done)
+    4. get streaming config from Channel (done)
+  */
  
   return (
         <>
@@ -178,6 +221,7 @@ export default function AddMenu() {
             <DialogActions>
                 <Button autoFocus onClick={()=> {
                     handleCreateStreamInDB();
+                    getStreamingConfig();
                     setStreamDetailsIsOpen(false)
                     setStreamConfigIsOpen(true)
                 }}>
@@ -186,6 +230,37 @@ export default function AddMenu() {
             </DialogActions>
           </Dialog>
 
+          {/* select channel dialog */}
+          <Dialog
+            fullWidth
+            open={selectChannelIsOpen}
+            >
+            <DialogTitle sx={{m:'0',p:'1.5vh 0.4vw' }}>
+                Select channel
+            <IconButton
+                aria-label="close"
+                onClick={()=>setSelectChannelIsOpen(false)}
+                sx={{
+                    position: 'absolute',
+                    right: 8,
+                    top: 8,
+                    color: (theme) => theme.palette.grey[500],
+                }}
+                >
+                <CloseIcon />
+            </IconButton>
+            </DialogTitle>
+            <DialogContent dividers>
+                <Grid container direction="row" spacing={1} sx={styles.container}>
+                    {getAllchannels()}
+                </Grid>
+            </DialogContent>
+            <DialogActions>
+                <Button autoFocus onClick={handleSelectChannel}>
+                    Select
+                </Button>
+            </DialogActions>
+          </Dialog>
 
           {/* Streaming config dialog */}
           <Dialog
@@ -211,7 +286,7 @@ export default function AddMenu() {
                 <Grid container >
                     <Grid container direction="row" sx={styles.personalInfos} >
                         <Typography variant="subtitle1" component="div" fontWeight="bold" >
-                            Server
+                            Stream server
                         </Typography>
                         <Typography variant="subtitle1" component="div">
                             {"rtmps://"+streamServer}
@@ -267,5 +342,12 @@ const styles = {
       transform: "translateY(-50%) rotate(45deg)",
       zIndex: 0,
     },
+    channelsList: {
+      marginRight: '20px',
+      "&:hover": {
+          backgroundColor:'#ececec',
+          cursor:'pointer'
+      }
+  },
 };
     
