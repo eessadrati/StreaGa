@@ -45,7 +45,7 @@ const Home = () => {
         onChange={handleChange}
         sx={{height:height/15}}
         >
-        <Tab value="home" label={<>{getIcon("home") }home</>}  iconPosition="start" sx={{textTransform:'none',fontSize:'1.5vw'}} />
+        <Tab value="home" label={<>{getIcon("home") }Home</>}  iconPosition="start" sx={{textTransform:'none',fontSize:'1.5vw'}} />
         <Tab value="blog" label={<>{getIcon("blog")}News & Reviews</>} iconPosition="start"  sx={{textTransform:'none',fontSize:'1.3vw'}} />
         <Tab value="event" label={<>{getIcon("event")} Events</>} iconPosition="start"  sx={{textTransform:'none',fontSize:'1.3vw'}} />
       </Tabs>

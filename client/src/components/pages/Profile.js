@@ -70,9 +70,9 @@ const Profile = () => {
                     <Typography variant="body1" component="div" gutterBottom>
                         No available channels.
                     </Typography>
-                    <Channel srcImg='profile.jpg' name="chaine dial zwamel" onClick={() => { alert("No available channels")}} sx={styles.channelsList}/>
-                    <Channel srcImg='profile.jpg' name="chaine dial lqhab" sx={styles.channelsList} />
-                    <Channel srcImg='profile.jpg' name="chaine dial zwamel 2" sx={styles.channelsList} />
+                    <Channel srcImg='profile.jpg' name="Tenz" onClick={() => { alert("No available channels")}} sx={styles.channelsList}/>
+                    <Channel srcImg='profile.jpg' name="Tenz mobile gaming" sx={styles.channelsList} />
+                    <Channel srcImg='profile.jpg' name="Skitlz" sx={styles.channelsList} />
                     <Button  
                         variant="contained"
                         sx={styles.button}
@@ -150,9 +150,9 @@ const Profile = () => {
                     </Typography>
                 </Grid>
                 <Divider sx={{marginRight:'160px', marginBottom:'30px'}} />
-                <Channel srcImg='profile.jpg' name="chaine dial zwamel" sx={styles.followedChannelsList}/>
-                <Channel srcImg='profile.jpg' name="chaine dial lqhab" sx={styles.followedChannelsList} />
-                <Channel srcImg='profile.jpg' name="chaine dial zwamel 2" sx={styles.followedChannelsList} />
+                <Channel srcImg='profile.jpg' name="W2S" sx={styles.followedChannelsList}/>
+                <Channel srcImg='profile.jpg' name="Gotaga" sx={styles.followedChannelsList} />
+                <Channel srcImg='profile.jpg' name="KSI" sx={styles.followedChannelsList} />
             </Grid>
 
             <Dialog

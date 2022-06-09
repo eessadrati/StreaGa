@@ -6,9 +6,9 @@ import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 function FollowersList() {
   return (
     <Grid container xs={6}>
-        <Channel srcImg='profile.jpg' name={getName("zzamel")} sx={styles.followersList}/>
-        <Channel srcImg='profile.jpg' name={getName("lqahba")} sx={styles.followersList} />
-        <Channel srcImg='profile.jpg' name={getName("ssobissa")} sx={styles.followersList} />
+        <Channel srcImg='profile.jpg' name={getName("saad")} sx={styles.followersList}/>
+        <Channel srcImg='profile.jpg' name={getName("amine")} sx={styles.followersList} />
+        <Channel srcImg='profile.jpg' name={getName("jawhar")} sx={styles.followersList} />
     </Grid>
   )
 }
