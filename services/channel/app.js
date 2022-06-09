@@ -28,6 +28,9 @@ app.use((req, res, next) => {
   next(); // continue to next middleware
 });
 
+var cors = require('cors');
+app.use(cors());
+
 //Routes which should handle requests
 app.use("/channels", channelRoutes);
 
@@ -45,9 +48,9 @@ app.use((error, req, res, next) => {
     },
   });
 });
-
-app.listen(process.env.PORT || 6000, () => {
-  console.log("Server is up on port 3000");
+const port = process.env.PORT || 6000;
+app.listen(port, () => {
+  console.log(`Server is up on port ${port}`);
 });
 
 module.exports = app;

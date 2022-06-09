@@ -4,15 +4,17 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {BlogContextProvider} from './context/BlogContext';
 import { EventContextProvider } from './context/EventContext';
+import { AuthContextProvider } from './context/AuthContext';
 
 ReactDOM.render(
   <React.StrictMode>
-  
+  <AuthContextProvider>
   <BlogContextProvider>
   <EventContextProvider>
     <App />
    </EventContextProvider>
    </BlogContextProvider>
+    </AuthContextProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

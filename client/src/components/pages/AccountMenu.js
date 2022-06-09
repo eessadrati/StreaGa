@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState,useEffect } from "react";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -14,9 +14,18 @@ import Logout from "@mui/icons-material/Logout";
 import { Link, useNavigate } from "react-router-dom";
 import Login from "@mui/icons-material/Login";
 import { Grid } from "@mui/material";
+import { userURL } from './../../config/Config';
+import axios from "axios";
+import AuthContext from './../../context/AuthContext';
+
 
 export default function AccountMenu() {
+  const {loggedIn,getCurrentUser,setLoggedIn,user}=useContext(AuthContext)
+  //const [user, setUser]=useState("");
+  
+//console.log(localStorage.getItem('user'))
   const [anchorEl, setAnchorEl] = useState(null);
+  const navigate= useNavigate()
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -25,21 +34,24 @@ export default function AccountMenu() {
     setAnchorEl(null);
   };
 
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+ 
+const handleLogOut=  ()=>{
+  localStorage.removeItem('userId');
+  localStorage.removeItem('user');
+ // getCurrentUser();
+ setLoggedIn(false);
+  navigate("/login")
+}
+const handleLogIn=()=>{
+  navigate("/login")
+}
 
   return (
     <>
-      {isLoggedIn === false ? (
-        <Button
-          variant="contained"
-          sx={{ bgcolor: "black", bottom: -5, right: 3 }}
-          endIcon={<Login />}
-          size="large"
-          component={Link}
-          to="/login"
-        >
-          Login
-        </Button>
+      {!loggedIn  ? (
+        <IconButton sx={{color:'white'}} onClick={handleLogIn}>
+        Login {" "}<Login />
+         </IconButton>
       ) : (
         <>
           <Box
@@ -80,15 +92,15 @@ export default function AccountMenu() {
             
           >
             <Grid >
-
-              <MenuItem component={Link} to="/Profile"   >
-              <ListItemIcon>
-                  <Avatar fontSize="small" />
+{/**src={user.profileImg.url }  */}
+              <MenuItem  component={Link} to={`/profile/${user.username}`}   >
+                  <ListItemIcon>
+                  <Avatar  src={user.profileImg ? user.profileImg.url:null }  fontSize="small" />
                   </ListItemIcon>
-                Profile
+                {user.username}
               </MenuItem>
             
-              <MenuItem component={Link} to="/">
+              <MenuItem onClick={handleLogOut}>
                 <ListItemIcon>
                   <Logout fontSize="small" />
                 </ListItemIcon>

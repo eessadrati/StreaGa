@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { BrowserRouter, Route, Routes,Outlet, Navigate  } from 'react-router-dom';
 import Home from './../components/pages/Home';
 import Login from './../components/pages/Login';
 import Signup from './../components/pages/Signup'
@@ -9,22 +9,38 @@ import Create from './../components/pages/Create';
 import Profile from '../components/pages/Profile';
 import Video from '../components/pages/Video';
 import Navbar from "../components/pages/Navbar";
+import AuthContext from './../context/AuthContext';
+const HeaderLayout=()=>(
+        <>
+          
+          <Navbar />
+          <Outlet />
+        </>
+      );
+
 const Router = () => {
-    //const {user} = useContext(AuthContext);
+    const {loggedIn} = useContext(AuthContext);
     
     return (
         <BrowserRouter>
-            <Navbar />
+            
             <Routes> 
-            <Route exact path="/" element={<Home/>}>
+            <Route element={<HeaderLayout />} >
+                <Route path="/">
+                    <Route index element={<Home />} />
+                    <Route  path="/profile/:username" element={<Profile/>} />
+                    <Route path="/channel" element={<Channel/>} />
+                    <Route path="/create" element={<Create/>} />
+                    <Route path="/video" element={<Video/>} />
+                </Route>
             </Route>
-            <Route  path="/profile" element={<Profile/>} />
-            <Route path="/login" element={<Login/>} />
-            <Route path="/signup" element={<Signup/>} />
-            <Route path="/channel" element={<Channel/>} />
-            <Route path="/create" element={<Create/>} />
-            <Route path="/video" element={<Video/>} />
-            <Route path="*" element={<ErrorPage/>}/>
+            {!loggedIn &&(
+                <>
+                <Route path="/login" element={<Login/>} />
+                <Route path="/signup" element={<Signup/>} />
+                </>
+            )}
+            <Route path="*" element={<Navigate to="/" replace />}/>
             </Routes>
         </BrowserRouter>
     );

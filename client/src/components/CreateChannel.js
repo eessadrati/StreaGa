@@ -18,7 +18,7 @@ function CreateChannel() {
             <InputField  id="outlined-basic" label="Channel name" variant="outlined" sx={{width:'400px'}}
               value={channelName} onChange={e => setChannelName(e.target.value)} />
         </Grid>
-        <Grid item sx={{marginTop:'2vh'}}>
+        <Grid item xs={10} sx={{marginTop:'2vh'}}>
             <TagsInput 
               sx={{width:'400px'}}
               selectedTags={handleTagsList}
@@ -35,13 +35,6 @@ function CreateChannel() {
   )
 }
 
-const styles = {
-    container: {
-        marginLeft: '10px',
-    },
-    button: {
-        alignItems:'right' //??
-    }
-}
+
 
 export default CreateChannel

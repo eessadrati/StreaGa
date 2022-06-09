@@ -1,4 +1,4 @@
-import React,{ useEffect, useState } from "react";
+import React,{ useContext, useEffect, useState } from "react";
 import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -10,12 +10,14 @@ import SearchIcon from "@mui/icons-material/Search";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import AccountMenu from "./AccountMenu";
 import AddMenu from "../AddMenu";
+import AuthContext from './../../context/AuthContext';
 
 
 export default function NavBar() {
   const [inputSearch, setInputSearch] = useState("");
   const navigate = useNavigate();
  
+  const {loggedIn}=useContext(AuthContext)
   const location = useLocation();
   useEffect(() => {
     if (location.pathname !== "/search") {
@@ -78,7 +80,7 @@ export default function NavBar() {
 
           <Box  sx={{ flexGrow: 1}} />
           <Box sx={{display:'flex' }}>
-             <AddMenu/>
+             {loggedIn && <AddMenu/>}
            {/**  <IconButton
              size="large"
               aria-label="show new mails"
