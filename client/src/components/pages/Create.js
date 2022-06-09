@@ -23,7 +23,6 @@ function Create() {
     const [tagsList,setTagsList]=useState([]);
 
     const handleTagsList =(items) =>{
-        console.log(items)
         setTagsList(items);
     }
 

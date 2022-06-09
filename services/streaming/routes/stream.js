@@ -60,4 +60,23 @@ router.delete("/:id", (req, res) => {
     .catch(err => res.status(400).json('Error: ' + err))
 });
 
+router.put("/:id", (req, res) => {
+    Stream.findById(req.params.id)
+    .then(stream => {
+        stream.streamTitle = req.body.streamTitle
+        stream.isLive = req.body.isLive
+        stream.channelId = req.body.channelId
+        stream.streamDate = req.body.streamDate
+        stream.tags = req.body.tags
+        stream.streamServer = req.body.streamServer
+        stream.streamKey = req.body.streamKey
+        stream.playbackUrl = req.body.playbackUrl
+        stream.recordingConfigurationArn = req.body.recordingConfigurationArn
+
+        stream.save()
+        .then(() => res.json('Stream informations updated!'))
+        .catch(err => res.status(400).json('Error: ' + err))
+    })
+})
+
 module.exports = router;

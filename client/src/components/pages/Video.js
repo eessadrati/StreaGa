@@ -109,17 +109,6 @@ const Video = () => {
     }, [isStreaming]); 
 
 
-   /* useEffect(() => {
-      let PLAYBACK_URL = "https://bb22679c1b21.eu-west-1.playback.live-video.net/api/video/v1/eu-west-1.540708535285.channel.Y6EGaxOtXuHQ.m3u8";
-      if (IVSPlayer.isPlayerSupported) {
-      const player = IVSPlayer.create();
-      player.attachHTMLVideoElement(document.getElementById('video-player'));
-      player.load(PLAYBACK_URL);
-      player.play();
-      }
-    }, []);*/
-
-
     const handleChatMemberClick = (member)=>{
       console.log(member)
     }
@@ -139,6 +128,23 @@ const Video = () => {
     const handleClose = () => {
       setOpen(false);
     };
+    const handleEdit = () => {
+      const UpdatedStream = {
+        streamTitle: streamTitle,
+        isLive : isLive,
+        channelId : channelId,
+        streamDate : streamDate,
+        tags : tags,
+        streamServer : streamServer,
+        streamKey : streamKey,
+        playbackUrl : playbackUrl,
+        recordingConfigurationArn : recordingConfigurationArn,
+      }
+
+      axios.put(`http://localhost:1111/streams/${id}`, updatedStream)
+      .then(res => console.log(res.data))
+      .catch(err => console.log(err))
+    }
     
 
     
@@ -204,7 +210,7 @@ const Video = () => {
                 </Grid>
             </Grid>
             <Grid item xs={7} sx={{ maxHeight:'100%',padding:'0.2vw', overflow:'auto',...hideScrollBar}} >
-            {isStreaming ?
+            {!isStreaming ?
             (
               <>
                 <Grid >
@@ -297,7 +303,7 @@ const Video = () => {
                         <Button autoFocus onClick={handleClose}>
                           Cancel
                         </Button>
-                        <Button autoFocus onClick={handleClose}>
+                        <Button autoFocus onClick={handleEdit}>
                           Save
                         </Button>
                       </DialogActions>
