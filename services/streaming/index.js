@@ -11,7 +11,7 @@ app.use(cors({
   }));
 app.use(express.json())
 
-const MONGODB_URI = 'mongodb+srv://odim:TjckOtWHyxXERa8i@cluster0.fecgf.mongodb.net/Streaga?retryWrites=true&w=majority'
+const MONGODB_URI = ''
 
 mongoose.connect(MONGODB_URI, {
     useNewUrlParser: true,
